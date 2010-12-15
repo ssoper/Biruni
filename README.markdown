@@ -16,10 +16,6 @@ Let's say you have an RSS feed that looks like this
           <name>Sports</name>
           <link>/sports</link>
         </category>
-        <category>
-          <name>Sports</name>
-          <link>/sports</link>
-        </category>
       </categories>
     </xml>
 
