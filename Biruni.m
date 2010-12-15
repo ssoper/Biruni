@@ -9,7 +9,6 @@
 
 
 @interface Biruni ()
-@property (nonatomic, retain) NSXMLParser *parser;
 @property (nonatomic, retain) NSMutableArray *currentPath, *results, *parsed;
 @property (nonatomic, retain) NSMutableDictionary *currentData;
 @property (nonatomic, retain) NSMutableString *currentText;
@@ -23,7 +22,7 @@
 @implementation Biruni
 
 @synthesize url, tagsToParse, afterParse;
-@synthesize parser, currentPath, results, currentData, currentText, process, parsed;
+@synthesize currentPath, results, currentData, currentText, process, parsed;
 
 - (void) initWithUrl:(NSURL *) _url
             andArray:(NSArray *) _tagsToParse
@@ -34,10 +33,10 @@
     self.afterParse = block;
 
     self.results = [[NSMutableArray alloc] init];
-    self.parser = [[NSXMLParser alloc] initWithContentsOfURL: self.url];
-    self.parser.delegate = self;
-    [self.parser setShouldProcessNamespaces: YES];
-    [self.parser parse];
+    NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL: self.url];
+    parser.delegate = self;
+    [parser setShouldProcessNamespaces: YES];
+    [parser parse];
   }
 }
 
@@ -75,7 +74,7 @@
   NSMutableSet *matches = [[NSMutableSet alloc] initWithArray: self.tagsToParse];
   [matches filterUsingPredicate:[NSPredicate predicateWithFormat:@"SELF MATCHES %@", qualifiedName]];
 
-  // Not a tag selected for parsing
+  // Not a tag selected for parsing, moving on
   if (matches.count == 0) {
     [matches release];
     return;
@@ -120,6 +119,7 @@
 - (void)parserDidEndDocument:(NSXMLParser *)parser {
   NSArray *final = [NSArray arrayWithArray: results];
   [results release];
+  [parser release];
 
   self.afterParse(final);
 }

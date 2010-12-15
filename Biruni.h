@@ -9,13 +9,11 @@
   
 
 @interface Biruni : NSObject <NSXMLParserDelegate> {
-  NSXMLParser *parser;
   NSURL *url;
   NSArray *tagsToParse;
   void (^afterParse)(NSArray *);
 }
 
-@property (nonatomic, retain, readonly) NSXMLParser *parser;
 @property (nonatomic, retain) NSURL *url;
 @property (nonatomic, retain) NSArray *tagsToParse;
 @property (copy) void (^afterParse)(NSArray *);
