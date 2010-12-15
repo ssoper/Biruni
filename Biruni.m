@@ -42,10 +42,20 @@
 }
 
 + (void) parseWithFeedURL:(NSString *) url
-                  andTags:(NSArray *) tags
+                  andTags:(NSString *) tags
                  andBlock:(void(^)(NSArray *)) block {
+
   NSURL *_url = [NSURL URLWithString: url];
-  [[Biruni alloc] initWithUrl: _url andArray: tags andBlock: block];
+
+  NSMutableArray *tmpTags = [[NSMutableArray alloc] init];
+  for (NSString *tag in [tags componentsSeparatedByString: @","]) {
+    NSString *trimmedTag = [tag stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    [tmpTags addObject: trimmedTag];
+  }
+  NSArray *_tags = [NSArray arrayWithArray: tmpTags];
+  [tmpTags release];
+
+  [[Biruni alloc] initWithUrl: _url andArray: _tags andBlock: block];
 }
 
 

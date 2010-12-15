@@ -21,7 +21,7 @@
 @property (copy) void (^afterParse)(NSArray *);
 
 + (void) parseWithFeedURL:(NSString *) url
-                  andTags:(NSArray *) tags
+                  andTags:(NSString *) tags
                  andBlock:(void(^)(NSArray *)) block;
 
 @end
