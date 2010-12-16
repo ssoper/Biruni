@@ -1,4 +1,4 @@
-## Biruni - Simple RSS parsing in Objective-c using blocks
+## Biruni - Simple RSS parsing in Objective-C using blocks
 
 ### Installation
 TODO
