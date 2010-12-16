@@ -23,7 +23,7 @@ Grabbing this is as simple as
 
     
     [Biruni parseWithFeedURL: @"http://url/feed" andTags: @"name,link" andBlock: ^(NSArray *results) {
-      for (id category in results) {
+      for (id result in results) {
         NSLog(@"Name: %@ and Link: %@", [result objectForKey: @"name"], [result objectForKey: @"link"]);
       }
     }];
