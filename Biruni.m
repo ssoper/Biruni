@@ -8,18 +8,11 @@
 #import "Biruni.h"
 #import "BiruniResult.h"
 
-@interface Biruni ()
-@property (nonatomic, retain) NSMutableArray *currentPath, *results, *parsed;
-@property (nonatomic, retain) NSMutableDictionary *currentData;
-@property (nonatomic, retain) NSMutableString *currentText;
-@property (nonatomic, assign) BOOL process;
-@end
-
 
 @implementation Biruni
 
 @synthesize tagsToParse, afterParse;
-@synthesize currentPath, results, currentData, currentText, process, parsed;
+@synthesize currentPath, results, parsed, currentData, currentText, process;
 
 
 #pragma mark -
