@@ -22,7 +22,8 @@
 
 - (void) testCount {
   [Biruni parseData: [self loadTestCase: @"Basic"] tags: @"title,year" block: ^(NSArray *results) {
-    STAssertEquals((NSUInteger)2, results.count, @"There should be 2 results but instead there were %u", results.count);
+    NSUInteger expected = 3;
+    STAssertEquals(expected, results.count, @"There should be %u results but instead there were %u", expected, results.count);
   }];
 }
 

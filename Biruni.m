@@ -125,7 +125,7 @@
 
   // Matches an already parsed tag which means we've moved onto the next set of results
   if (matches.count > 0) {
-    [self.results addObject: [[BiruniResult alloc] initWithDict: currentData]]; //[NSDictionary dictionaryWithDictionary: currentData]];
+    [self.results addObject: [[BiruniResult alloc] initWithDict: currentData]];
     [currentData release];
     currentData = [[NSMutableDictionary alloc] init];
     [parsed release];
@@ -156,6 +156,10 @@
 }
 
 - (void)parserDidEndDocument:(NSXMLParser *)parser {
+  [self.results addObject: [[BiruniResult alloc] initWithDict: currentData]];
+  [currentData release];
+  [parsed release];
+
   NSArray *final = [NSArray arrayWithArray: results];
   [results release];
   [parser release];
