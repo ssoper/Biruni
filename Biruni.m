@@ -13,39 +13,56 @@
 @property (nonatomic, retain) NSMutableDictionary *currentData;
 @property (nonatomic, retain) NSMutableString *currentText;
 @property (nonatomic, assign) BOOL process;
-- (void) initWithUrl:(NSURL *) _url
-            andArray:(NSArray *) _tagsToParse
-            andBlock:(void(^)(NSArray *)) block;
 @end
 
 
 @implementation Biruni
 
-@synthesize url, tagsToParse, afterParse;
+@synthesize tagsToParse, afterParse;
 @synthesize currentPath, results, currentData, currentText, process, parsed;
 
-- (void) initWithUrl:(NSURL *) _url
-            andArray:(NSArray *) _tagsToParse
+
+#pragma mark -
+#pragma mark Private
+
+- (id) initWithArray:(NSArray *) _tagsToParse
             andBlock:(void(^)(NSArray *)) block {
   if (self = [super init]) {
-    self.url = _url;
     self.tagsToParse = _tagsToParse;
     self.afterParse = block;
-
     self.results = [[NSMutableArray alloc] init];
-    NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL: self.url];
+  }
+
+  return self;
+}
+
+- (id) initWithData:(NSData *) _data
+           andArray:(NSArray *) _tagsToParse
+           andBlock:(void(^)(NSArray *)) block {
+  if (self = [self initWithArray: _tagsToParse andBlock: block]) {
+    NSXMLParser *parser = [[NSXMLParser alloc] initWithData: _data];
     parser.delegate = self;
     [parser setShouldProcessNamespaces: YES];
     [parser parse];
   }
+
+  return self;
 }
 
-+ (void) parseWithFeedURL:(NSString *) url
-                  andTags:(NSString *) tags
-                 andBlock:(void(^)(NSArray *)) block {
+- (id) initWithUrl:(NSURL *) _url
+          andArray:(NSArray *) _tagsToParse
+          andBlock:(void(^)(NSArray *)) block {
+  if (self = [self initWithArray: _tagsToParse andBlock: block]) {
+    NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL: _url];
+    parser.delegate = self;
+    [parser setShouldProcessNamespaces: YES];
+    [parser parse];
+  }
 
-  NSURL *_url = [NSURL URLWithString: url];
+  return self;
+}
 
++ (NSArray *) parseTags:(NSString *) tags {
   NSMutableArray *tmpTags = [[NSMutableArray alloc] init];
   for (NSString *tag in [tags componentsSeparatedByString: @","]) {
     NSString *trimmedTag = [tag stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -54,7 +71,29 @@
   NSArray *_tags = [NSArray arrayWithArray: tmpTags];
   [tmpTags release];
 
-  [[Biruni alloc] initWithUrl: _url andArray: _tags andBlock: block];
+  return _tags;
+}
+
+
+#pragma mark -
+#pragma mark Class methods
+
++ (void) parseData:(NSData *) data
+              tags:(NSString *) tags
+             block:(void(^)(NSArray *)) block {
+  [[[Biruni alloc] initWithData: data
+                       andArray: [self parseTags: tags]
+                       andBlock: block]
+   autorelease];
+}
+
++ (void) parseURL:(NSString *) url
+             tags:(NSString *) tags
+            block:(void(^)(NSArray *)) block {
+  [[[Biruni alloc] initWithUrl: [NSURL URLWithString: url]
+                      andArray: [self parseTags: tags]
+                      andBlock: block]
+   autorelease];
 }
 
 

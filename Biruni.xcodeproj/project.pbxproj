@@ -15,6 +15,7 @@
 		8DCDA62312BEB4F10045131A /* Biruni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* Biruni.framework */; };
 		8DCDA63412BEB5A20045131A /* UnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCDA63312BEB5A20045131A /* UnitTests.m */; };
 		8DCDA64812BEB5F40045131A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
+		8DCDA6B612BFE5510045131A /* Basic.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8DCDA6B512BFE5510045131A /* Basic.xml */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,7 @@
 		8DCDA62112BEB4E30045131A /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		8DCDA63212BEB5A20045131A /* UnitTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnitTests.h; sourceTree = "<group>"; };
 		8DCDA63312BEB5A20045131A /* UnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UnitTests.m; sourceTree = "<group>"; };
+		8DCDA6B512BFE5510045131A /* Basic.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Basic.xml; path = "Test Cases/Basic.xml"; sourceTree = "<group>"; };
 		D2F7E79907B2D74100F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
@@ -101,6 +103,7 @@
 		089C1665FE841158C02AAC07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8DCDA69112BFD9F20045131A /* Test Cases */,
 				8DC2EF5A0486A6940098B216 /* Info.plist */,
 				089C1666FE841158C02AAC07 /* InfoPlist.strings */,
 			);
@@ -151,6 +154,14 @@
 				8DCDA63312BEB5A20045131A /* UnitTests.m */,
 			);
 			name = Tests;
+			sourceTree = "<group>";
+		};
+		8DCDA69112BFD9F20045131A /* Test Cases */ = {
+			isa = PBXGroup;
+			children = (
+				8DCDA6B512BFE5510045131A /* Basic.xml */,
+			);
+			name = "Test Cases";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -244,6 +255,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8DCDA6B612BFE5510045131A /* Basic.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
