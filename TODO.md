@@ -9,5 +9,4 @@
       <category>Science</category>
       <name>News</news>
     </article>
-    
-4. Look into using NSInvocation to avoid users having to do the [result objectForKey:@"property"] pattern. We'd rather use result.property.
+

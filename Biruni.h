@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-  
+
 
 @interface Biruni : NSObject <NSXMLParserDelegate> {
   NSArray *tagsToParse;

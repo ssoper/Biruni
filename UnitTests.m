@@ -20,12 +20,24 @@
 #pragma mark -
 #pragma mark Tests
 
-- (void) testBasic {
+- (void) testCount {
   [Biruni parseData: [self loadTestCase: @"Basic"] tags: @"title,year" block: ^(NSArray *results) {
     STAssertEquals((NSUInteger)2, results.count, @"There should be 2 results but instead there were %u", results.count);
   }];
 }
 
+- (void) testTitles {
+  [Biruni parseData: [self loadTestCase: @"Basic"] tags: @"title,year" block: ^(NSArray *results) {
+    NSArray *titles = [NSArray arrayWithObjects: @"Bringing up Baby", @"His Girl Friday", @"Arsenic and Old Lace", nil];
+    for (NSUInteger count = 0; count < results.count; count++) {
+      STAssertEqualObjects([[results objectAtIndex: count] title],
+                           [titles objectAtIndex: count],
+                           @"Title should be %@ but is %@",
+                           [titles objectAtIndex: count],
+                           [[results objectAtIndex: count] title]);
+    }
+  }];
+}
 
 #pragma mark -
 #pragma mark Private

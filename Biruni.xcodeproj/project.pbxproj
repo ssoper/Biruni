@@ -16,6 +16,8 @@
 		8DCDA63412BEB5A20045131A /* UnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCDA63312BEB5A20045131A /* UnitTests.m */; };
 		8DCDA64812BEB5F40045131A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 		8DCDA6B612BFE5510045131A /* Basic.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8DCDA6B512BFE5510045131A /* Basic.xml */; };
+		8DCDA70912BFF5180045131A /* BiruniResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCDA6E712BFF1FE0045131A /* BiruniResult.m */; };
+		8DCDA72612BFF5580045131A /* BiruniResult.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCDA6E612BFF1FE0045131A /* BiruniResult.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +46,8 @@
 		8DCDA63212BEB5A20045131A /* UnitTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnitTests.h; sourceTree = "<group>"; };
 		8DCDA63312BEB5A20045131A /* UnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UnitTests.m; sourceTree = "<group>"; };
 		8DCDA6B512BFE5510045131A /* Basic.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Basic.xml; path = "Test Cases/Basic.xml"; sourceTree = "<group>"; };
+		8DCDA6E612BFF1FE0045131A /* BiruniResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BiruniResult.h; sourceTree = "<group>"; };
+		8DCDA6E712BFF1FE0045131A /* BiruniResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BiruniResult.m; sourceTree = "<group>"; };
 		D2F7E79907B2D74100F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
@@ -115,6 +119,8 @@
 			children = (
 				8D8F455B12B960C400386200 /* Biruni.h */,
 				8D8F455C12B960C400386200 /* Biruni.m */,
+				8DCDA6E612BFF1FE0045131A /* BiruniResult.h */,
+				8DCDA6E712BFF1FE0045131A /* BiruniResult.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -172,6 +178,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D8F455D12B960C400386200 /* Biruni.h in Headers */,
+				8DCDA72612BFF5580045131A /* BiruniResult.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,6 +290,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D8F455E12B960C400386200 /* Biruni.m in Sources */,
+				8DCDA70912BFF5180045131A /* BiruniResult.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

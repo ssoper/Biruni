@@ -6,25 +6,26 @@ TODO
 ### Use
 Let's say you have an RSS feed that looks like this
 
-    <xml>
-      <categories>
-        <category>
-          <name>Science</name>
-          <link>/science</link>
-        </category>
-        <category>
-          <name>Sports</name>
-          <link>/sports</link>
-        </category>
-      </categories>
-    </xml>
+    <?xml version="1.0" encoding="UTF-8"?>
+    <rss>
+      <item>
+        <title>Bringing up Baby</title>
+        <year>1938</year>
+      </item>
+      <item>
+        <title>His Girl Friday</title>
+        <year>1940</year>
+      </item>
+      <item>
+        <title>Arsenic and Old Lace</title>
+        <year>1944</year>
+      </item>
+    </rss>
 
-Grabbing this is as simple as 
+Grabbing it is as simple as
 
-    
-    [Biruni parseWithFeedURL: @"http://url/feed" andTags: @"name,link" andBlock: ^(NSArray *results) {
+    [Biruni parseURL: @"http://url/feed" tags: @"title,year" block: ^(NSArray *results) {
       for (id result in results) {
-        NSLog(@"Name: %@ and Link: %@", [result objectForKey: @"name"], [result objectForKey: @"link"]);
+        NSLog(@"Movie: %@ (%@)", [result title], [result year]);
       }
     }];
-

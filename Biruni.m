@@ -6,7 +6,7 @@
 //
 
 #import "Biruni.h"
-
+#import "BiruniResult.h"
 
 @interface Biruni ()
 @property (nonatomic, retain) NSMutableArray *currentPath, *results, *parsed;
@@ -76,7 +76,7 @@
 
 
 #pragma mark -
-#pragma mark Class methods
+#pragma mark Public class methods
 
 + (void) parseData:(NSData *) data
               tags:(NSString *) tags
@@ -125,7 +125,7 @@
 
   // Matches an already parsed tag which means we've moved onto the next set of results
   if (matches.count > 0) {
-    [self.results addObject: [NSDictionary dictionaryWithDictionary: currentData]];
+    [self.results addObject: [[BiruniResult alloc] initWithDict: currentData]]; //[NSDictionary dictionaryWithDictionary: currentData]];
     [currentData release];
     currentData = [[NSMutableDictionary alloc] init];
     [parsed release];
@@ -161,6 +161,13 @@
   [parser release];
 
   self.afterParse(final);
+}
+
+- (void) dealloc {
+  [tagsToParse release];
+  [afterParse release];
+
+  [super dealloc];
 }
 
 @end
