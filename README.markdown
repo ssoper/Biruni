@@ -45,7 +45,7 @@ Grabbing it is as simple as
 5. Click on `Add Other…` on the bottom of the dialog, browse to the project's `Frameworks` directory and select `Biruni.framework`.
 6. Expand `Targets`, right-click on your project's name and select `Add` &rarr; `New Build Phase` &rarr; `New Copy Files Build Phase`. Select `Frameworks` from the dropdown and close the dialog.
 7. Now drag `Biruni.framework` from the `Linked Frameworks` group into this newly-created group which should be labeled `Copy Files`. Then take this same group and drag it to a spot above `Link Binary With Libraries` and any group named `Run Script`.
-8. Right-click on your project's name underneath `Targets` and select `Get Info`. Modify the `Runtime search paths` to include `@loader_path/../Frameworks`.
+8. Right-click on your project's name underneath `Targets` and select `Get Info`. Modify the `Runtime search paths` value to include `@loader_path/../Frameworks`.
 9. Add `#import <Biruni/Biruni.h>` to the top of any file where you want to include the functionality.
 
 ###  Notes
