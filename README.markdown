@@ -42,7 +42,7 @@ Grabbing it is as simple as
 4. In the project that you want to add Biruni to, browse to the project's root directory and create a directory called `Frameworks`.
 5. Use Finder to drag the `Biruni.framework` directory into the `Frameworks` directory of your project.
 6. In your Mac OSX project, open `Frameworks` &rarr; `Linked Frameworks`. Right-click on `Linked Frameworks`, select `Add` &rarr; `Existing Framework`.
-5. Click on "Add Other&hellip;" on the bottom of the dialog, browse to the project's `Frameworks` directory and select `Biruni.framework`.
+5. Click on `Add Other…` on the bottom of the dialog, browse to the project's `Frameworks` directory and select `Biruni.framework`.
 6. Expand `Targets`, right-click on your project's name and select `Add` &rarr; `New Build Phase` &rarr; `New Copy Files Build Phase`. Select `Frameworks` from the dropdown and close the dialog.
 7. Now drag `Biruni.framework` from the `Linked Frameworks` group into this newly-created group which should be labeled `Copy Files`. Then take this same group and drag it to a spot above `Link Binary With Libraries` and any group named `Run Script`.
 8. Right-click on your project's name underneath `Targets` and select `Get Info`. Modify the `Runtime search paths` to include `@loader_path/../Frameworks`.
