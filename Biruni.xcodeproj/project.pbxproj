@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8D8F455D12B960C400386200 /* Biruni.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D8F455B12B960C400386200 /* Biruni.h */; };
+		8D8F455D12B960C400386200 /* Biruni.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D8F455B12B960C400386200 /* Biruni.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8D8F455E12B960C400386200 /* Biruni.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8F455C12B960C400386200 /* Biruni.m */; };
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
 		8DCDA62212BEB4E30045131A /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DCDA62112BEB4E30045131A /* SenTestingKit.framework */; };
@@ -24,7 +24,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* Biruni */;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = Biruni;
 		};
 /* End PBXContainerItemProxy section */
@@ -85,7 +85,6 @@
 				089C1665FE841158C02AAC07 /* Resources */,
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
-				8DCDA5EB12BEB2DE0045131A /* BiruniTests-Info.plist */,
 			);
 			name = Biruni;
 			sourceTree = "<group>";
@@ -105,6 +104,7 @@
 				8DCDA69112BFD9F20045131A /* Test Cases */,
 				8DC2EF5A0486A6940098B216 /* Info.plist */,
 				089C1666FE841158C02AAC07 /* InfoPlist.strings */,
+				8DCDA5EB12BEB2DE0045131A /* BiruniTests-Info.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -331,7 +331,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Biruni_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				INSTALL_PATH = "@rpath";
+				LD_DYLIB_INSTALL_NAME = "@rpath/Biruni.framework/Versions/A/Biruni";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				PRODUCT_NAME = Biruni;
 				WRAPPER_EXTENSION = framework;
 			};
@@ -349,7 +351,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Biruni_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				INSTALL_PATH = "@rpath";
+				LD_DYLIB_INSTALL_NAME = "@rpath/Biruni.framework/Versions/A/Biruni";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				PRODUCT_NAME = Biruni;
 				WRAPPER_EXTENSION = framework;
 			};
@@ -363,6 +367,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LD_DYLIB_INSTALL_NAME = "\"@loader_path/../Frameworks/Biruni.framework/Biruni\"";
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				SDKROOT = macosx10.6;
@@ -376,6 +381,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LD_DYLIB_INSTALL_NAME = "\"@loader_path/../Frameworks/Biruni.framework/Biruni\"";
 				PREBINDING = NO;
 				SDKROOT = macosx10.6;
 			};
