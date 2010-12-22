@@ -53,5 +53,4 @@ Grabbing it is as simple as
 2. You can run the included unit tests by selecting `BiruniTests` as your target and building.
 
 ### Namesake
-Abu Rayhan Biruni was a Persian scholar who lived during the Islamic Golden Age. Using a primitive tool known as an astrolabe and the power of his intellect, he was able to measure the diameter of the Earth to within ten miles of modern measurements. He reportedly developed this method to avoid "walking across hot, dusty deserts". 
-<img src="http://upload.wikimedia.org/wikipedia/en/thumb/1/1e/Iran_Biruni.jpg/200px-Iran_Biruni.jpg" width="200" height="145" alt="Abu Rayhan Biruni" align="right">
+<img src="http://upload.wikimedia.org/wikipedia/en/thumb/1/1e/Iran_Biruni.jpg/200px-Iran_Biruni.jpg" width="200" height="145" alt="Abu Rayhan Biruni" align="right">Abu Rayhan Biruni was a Persian scholar who lived during the Islamic Golden Age. Using a primitive tool known as an astrolabe and the power of his intellect, he was able to measure the diameter of the Earth to within ten miles of modern measurements. He reportedly developed this method to avoid "walking across hot, dusty deserts". 
