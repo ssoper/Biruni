@@ -31,19 +31,23 @@
   void (^afterParse)(NSArray *);
 
 @private
-  NSMutableArray *currentPath, *results, *parsed;
+  NSMutableArray *currentPath, *results;
   NSMutableDictionary *currentData;
   NSMutableString *currentText;
   BOOL process;
+
+  NSUInteger targetDepth;
 }
 
 @property (nonatomic, retain) NSArray *tagsToParse;
 @property (copy) void (^afterParse)(NSArray *);
 
-@property (nonatomic, retain) NSMutableArray *currentPath, *results, *parsed;
+@property (nonatomic, retain) NSMutableArray *currentPath, *results;
 @property (nonatomic, retain) NSMutableDictionary *currentData;
 @property (nonatomic, retain) NSMutableString *currentText;
 @property (nonatomic, assign) BOOL process;
+
+@property (nonatomic, assign) NSUInteger targetDepth;
 
 + (void) parseData:(NSData *) data
               tags:(NSString *) tags

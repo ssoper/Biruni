@@ -48,14 +48,26 @@
   [Biruni parseData: [self loadTestCase: @"Basic"] tags: @"title,year" block: ^(NSArray *results) {
     NSArray *titles = [NSArray arrayWithObjects: @"Bringing up Baby", @"His Girl Friday", @"Arsenic and Old Lace", nil];
     for (NSUInteger count = 0; count < results.count; count++) {
-      STAssertEqualObjects([[results objectAtIndex: count] title],
+      STAssertEqualObjects([[results objectAtIndex: count] objectForKey: @"title"],
                            [titles objectAtIndex: count],
                            @"Title should be %@ but is %@",
                            [titles objectAtIndex: count],
-                           [[results objectAtIndex: count] title]);
+                           [[results objectAtIndex: count] objectForKey: @"title"]);
     }
   }];
 }
+
+- (void) testCategories {
+  [Biruni parseData: [self loadTestCase: @"Basic"] tags: @"title,year,category" block: ^(NSArray *results) {
+    NSUInteger expected, actual;
+    expected = 2;
+    for (id result in results) {
+      actual = [[result objectForKey: @"category"] count];
+      STAssertEquals(expected, actual, @"There should be %u categories but there are only %u", expected, actual);
+    }
+  }];
+}
+
 
 #pragma mark -
 #pragma mark Private

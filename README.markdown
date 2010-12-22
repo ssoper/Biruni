@@ -23,7 +23,7 @@ Grabbing it is as simple as
 
     [Biruni parseURL: @"http://url/feed" tags: @"title,year" block: ^(NSArray *results) {
       for (id result in results) {
-        NSLog(@"Movie: %@ (%@)", [result title], [result year]);
+        NSLog(@"Movie: %@ (%@)", [result objectForKey:@"title"], [result objectForKey:@"year"]);
       }
     }];
 

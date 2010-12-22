@@ -24,13 +24,12 @@
 //
 
 #import "Biruni.h"
-#import "BiruniResult.h"
 
 
 @implementation Biruni
 
 @synthesize tagsToParse, afterParse;
-@synthesize currentPath, results, parsed, currentData, currentText, process;
+@synthesize currentPath, results, currentData, currentText, process, targetDepth;
 
 
 #pragma mark -
@@ -71,6 +70,16 @@
   }
 
   return self;
+}
+
+- (BOOL) tagMatch:(NSString *) tag {
+  NSMutableSet *matches = [[NSMutableSet alloc] initWithArray: self.tagsToParse];
+  [matches filterUsingPredicate:[NSPredicate predicateWithFormat:@"SELF MATCHES %@", tag]];
+
+  BOOL result = (matches.count > 0);
+  [matches release];
+
+  return result;
 }
 
 + (NSArray *) parseTags:(NSString *) tags {
@@ -114,37 +123,26 @@
 - (void)parserDidStartDocument:(NSXMLParser *)parser {
   self.currentPath = [[NSMutableArray alloc] init];
   self.currentData = [[NSMutableDictionary alloc] init];
-  self.parsed = [[NSMutableArray alloc] init];
   self.process = NO;
+  self.targetDepth = 0;
 }
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qualifiedName attributes:(NSDictionary *)attributeDict {
+
   [self.currentPath addObject: qualifiedName];
 
-  NSMutableSet *matches = [[NSMutableSet alloc] initWithArray: self.tagsToParse];
-  [matches filterUsingPredicate:[NSPredicate predicateWithFormat:@"SELF MATCHES %@", qualifiedName]];
+  // We've found a matching tag so this must be our target depth
+  if (self.targetDepth == 0 && [self tagMatch: qualifiedName])
+    self.targetDepth = self.currentPath.count;
 
-  // Not a tag selected for parsing, moving on
-  if (matches.count == 0) {
-    [matches release];
+  // Wrong depth
+  if (self.targetDepth != self.currentPath.count)
     return;
-  }
 
-  [matches release];
-  matches = [[NSMutableSet alloc] initWithArray: self.parsed];
-  [matches filterUsingPredicate: [NSPredicate predicateWithFormat:@"SELF MATCHES %@", qualifiedName]];
+  // Tag doesn't match
+  if (![self tagMatch: qualifiedName])
+    return;
 
-  // Matches an already parsed tag which means we've moved onto the next set of results
-  if (matches.count > 0) {
-    [self.results addObject: [[BiruniResult alloc] initWithDict: currentData]];
-    [currentData release];
-    currentData = [[NSMutableDictionary alloc] init];
-    [parsed release];
-    self.parsed = [[NSMutableArray alloc] init];
-  }
-
-  [matches release];
-  [self.parsed addObject: qualifiedName];
   self.currentText = [[NSMutableString alloc] init];
   self.process = YES;
 }
@@ -156,9 +154,35 @@
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
+  if (!self.process && (self.currentPath.count == (self.targetDepth - 1))) {
+    [self.results addObject: [[NSMutableDictionary alloc] initWithDictionary: currentData]];
+    [currentData release];
+    currentData = [[NSMutableDictionary alloc] init];
+  }
+
   if (self.process) {
     NSString *finalText = [NSString stringWithString: currentText];
-    [self.currentData setObject: finalText forKey: (NSString *)[self.currentPath lastObject]];
+    NSString *key = (NSString *)[self.currentPath lastObject];
+
+    if ([self.currentData objectForKey: key] != nil) {
+      // Multiple values exist for this tag
+      NSMutableArray *tmpValues;
+
+      if ([[self.currentData objectForKey: key] isKindOfClass: [NSArray class]]) {
+        // We already have this object as an NSArray and simply need to append this value
+        tmpValues = [[NSMutableArray alloc] initWithArray: [self.currentData objectForKey: key]];
+      } else {
+        // Just a single NSString exists for this tag
+        tmpValues = [[NSMutableArray alloc] initWithObjects: [self.currentData objectForKey: key], nil];
+      }
+
+      [[self.currentData objectForKey: key] release];
+      [tmpValues addObject: finalText];
+      [self.currentData setObject: [[NSArray alloc] initWithArray: tmpValues]  forKey: key];
+    } else {
+      [self.currentData setObject: finalText forKey: (NSString *)[self.currentPath lastObject]];
+    }
+
     [currentText release];
   }
 
@@ -167,9 +191,7 @@
 }
 
 - (void)parserDidEndDocument:(NSXMLParser *)parser {
-  [self.results addObject: [[BiruniResult alloc] initWithDict: currentData]];
   [currentData release];
-  [parsed release];
 
   NSArray *final = [NSArray arrayWithArray: results];
   [results release];
