@@ -192,6 +192,7 @@
 
 - (void)parserDidEndDocument:(NSXMLParser *)parser {
   [currentData release];
+  [currentPath release];
 
   NSArray *final = [NSArray arrayWithArray: self.results];
   [results release];
