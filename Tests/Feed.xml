@@ -2,20 +2,23 @@
 <rss>
   <item>
     <title>Bringing up Baby</title>
-    <year>1938</year>
     <category>Comedy</category>
     <category>Love story</category>
+    <pubDate>Tue, 18 Feb 1938 23:45:00 +0000</pubDate>
+    <published>1938-02-18T23:45:00</published>
   </item>
   <item>
     <title>His Girl Friday</title>
-    <year>1940</year>
     <category>Drama</category>
     <category>Love story</category>
+    <pubDate>Thu, 18 Jan 1940 21:30:00 +0000</pubDate>
+    <published>1940-01-18T21:30:00</published>
   </item>
   <item>
     <title>Arsenic and Old Lace</title>
-    <year>1944</year>
     <category>Comedy</category>
     <category>Slapstick</category>
+    <pubDate>Sat, 23 Sep 1944 19:00:00 +0000</pubDate>
+    <published>1944-09-23T19:00:00</published>
   </item>
 </rss>

@@ -38,14 +38,14 @@
 #pragma mark Tests
 
 - (void) testCount {
-  [Biruni parseData: [self loadTestCase: @"Basic"] tags: @"title,year" block: ^(NSArray *results) {
+  [Biruni parseData: [self loadTestCase: @"Basic"] tags: @"title" block: ^(NSArray *results) {
     NSUInteger expected = 3;
     STAssertEquals(expected, results.count, @"There should be %u results but instead there were %u", expected, results.count);
   }];
 }
 
 - (void) testTitles {
-  [Biruni parseData: [self loadTestCase: @"Basic"] tags: @"title,year" block: ^(NSArray *results) {
+  [Biruni parseData: [self loadTestCase: @"Basic"] tags: @"title" block: ^(NSArray *results) {
     NSArray *titles = [NSArray arrayWithObjects: @"Bringing up Baby", @"His Girl Friday", @"Arsenic and Old Lace", nil];
     for (NSUInteger count = 0; count < results.count; count++) {
       STAssertEqualObjects([[results objectAtIndex: count] objectForKey: @"title"],
@@ -58,7 +58,7 @@
 }
 
 - (void) testCategories {
-  [Biruni parseData: [self loadTestCase: @"Basic"] tags: @"title,year,category" block: ^(NSArray *results) {
+  [Biruni parseData: [self loadTestCase: @"Basic"] tags: @"category" block: ^(NSArray *results) {
     NSUInteger expected, actual;
     expected = 2;
     for (id result in results) {
@@ -68,6 +68,19 @@
   }];
 }
 
+- (void) testDates {
+  [Biruni parseData: [self loadTestCase: @"Basic"] tags: @"pubDate,published" block: ^(NSArray *results) {
+    id pubDate, published;
+    for (id result in results) {
+      pubDate = [result objectForKey: @"pubDate"];
+      published = [result objectForKey: @"published"];
+
+      STAssertTrue([pubDate isKindOfClass: [NSDate class]], @"%@ is not an NSDate", [pubDate class]);
+      STAssertTrue([published isKindOfClass: [NSDate class]], @"%@ is not an NSDate", [published class]);
+      STAssertEqualObjects(pubDate, published, @"%@ should be equal to %@ but isn't", pubDate, published);
+    }
+  }];
+}
 
 #pragma mark -
 #pragma mark Private

@@ -24,12 +24,13 @@
 //
 
 #import "Biruni.h"
+#import "BiruniFormatter.h"
 
 
 @implementation Biruni
 
 @synthesize tagsToParse, afterParse;
-@synthesize currentPath, results, currentData, currentText, process, targetDepth;
+@synthesize currentPath, results, currentData, currentText, formatter, process, targetDepth;
 
 
 #pragma mark -
@@ -41,6 +42,7 @@
     self.tagsToParse = _tagsToParse;
     self.afterParse = block;
     self.results = [[NSMutableArray alloc] init];
+    self.formatter = [[BiruniFormatter alloc] init];
   }
 
   return self;
@@ -161,8 +163,15 @@
   }
 
   if (self.process) {
-    NSString *finalText = [NSString stringWithString: currentText];
+    id finalObj = nil;
     NSString *key = (NSString *)[self.currentPath lastObject];
+    NSUInteger dateFormat = [self.formatter dateTag: qName];
+
+    if (dateFormat != BiruniDateFormatNil)
+      finalObj = [self.formatter parseDate: currentText dateFormat: dateFormat];
+
+    if (!finalObj)
+      finalObj = [NSString stringWithString: currentText];
 
     if ([self.currentData objectForKey: key] != nil) {
       // Multiple values exist for this tag
@@ -176,11 +185,11 @@
         tmpValues = [[NSMutableArray alloc] initWithObjects: [self.currentData objectForKey: key], nil];
       }
 
-      [tmpValues addObject: finalText];
+      [tmpValues addObject: finalObj];
       [self.currentData setObject: [NSArray arrayWithArray: tmpValues] forKey: key];
       [tmpValues release];
     } else {
-      [self.currentData setObject: finalText forKey: (NSString *)[self.currentPath lastObject]];
+      [self.currentData setObject: finalObj forKey: (NSString *)[self.currentPath lastObject]];
     }
 
     [currentText release];
@@ -204,6 +213,7 @@
 - (void) dealloc {
   [tagsToParse release];
   [afterParse release];
+  [formatter release];
 
   [super dealloc];
 }

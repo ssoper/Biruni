@@ -1,5 +1,5 @@
 //
-//  Biruni.h
+//  BiruniFormatter.h
 //  Biruni
 //
 //  Copyright (c) 2010 Sean Soper
@@ -25,36 +25,22 @@
 
 #import <Foundation/Foundation.h>
 
-@class BiruniFormatter;
+typedef enum {
+  BiruniDateFormatNil,
+  BiruniDateFormatRFC822,
+  BiruniDateFormatRFC3399
+} BiruniDateFormats;
 
-@interface Biruni : NSObject <NSXMLParserDelegate> {
-  NSArray *tagsToParse;
-  void (^afterParse)(NSArray *);
-
-@private
-  NSMutableArray *currentPath, *results;
-  NSMutableDictionary *currentData;
-  NSMutableString *currentText;
-  BiruniFormatter *formatter;
-  BOOL process;
-  NSUInteger targetDepth;
+@interface BiruniFormatter : NSObject {
+  NSArray *kDateTagsRFC822, *kDateTagsRFC3399;
+  NSDateFormatter *dateFormatter;
 }
 
-@property (nonatomic, retain) NSArray *tagsToParse;
-@property (copy) void (^afterParse)(NSArray *);
+@property (nonatomic, retain) NSArray *kDateTagsRFC822, *kDateTagsRFC3399;
+@property (nonatomic, retain) NSDateFormatter *dateFormatter;
 
-@property (nonatomic, retain) NSMutableArray *currentPath, *results;
-@property (nonatomic, retain) NSMutableDictionary *currentData;
-@property (nonatomic, retain) NSMutableString *currentText;
-@property (nonatomic, retain) BiruniFormatter *formatter;
-@property (nonatomic, assign) BOOL process;
-@property (nonatomic, assign) NSUInteger targetDepth;
+- (NSUInteger) dateTag:(NSString *) tag;
+- (id) parseDate:(NSString *) strDate
+      dateFormat:(NSUInteger) dateFormat;
 
-+ (void) parseData:(NSData *) data
-              tags:(NSString *) tags
-             block:(void(^)(NSArray *)) block;
-
-+ (void) parseURL:(NSString *) url
-             tags:(NSString *) tags
-            block:(void(^)(NSArray *)) block;
 @end
