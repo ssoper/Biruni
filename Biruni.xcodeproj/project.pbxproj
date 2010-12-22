@@ -13,7 +13,6 @@
 		8DCDA62212BEB4E30045131A /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DCDA62112BEB4E30045131A /* SenTestingKit.framework */; };
 		8DCDA62312BEB4F10045131A /* Biruni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* Biruni.framework */; };
 		8DCDA7F612C004050045131A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
-		8DEEE01512C2498100B24C59 /* BiruniFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DEEE01412C2498100B24C59 /* BiruniFormatter.m */; };
 		8DEEE04912C268FA00B24C59 /* BiruniFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DEEE01312C2498100B24C59 /* BiruniFormatter.h */; };
 		8DEEE04A12C268FD00B24C59 /* BiruniFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DEEE01412C2498100B24C59 /* BiruniFormatter.m */; };
 		8DEEE0B812C2842100B24C59 /* UnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DEEE0B012C283FD00B24C59 /* UnitTests.m */; };
@@ -291,7 +290,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8DEEE01512C2498100B24C59 /* BiruniFormatter.m in Sources */,
 				8DEEE0B812C2842100B24C59 /* UnitTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
