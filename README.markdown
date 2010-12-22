@@ -51,6 +51,7 @@ Grabbing it is as simple as
 ###  Notes
 1. You don't have to list all the tags in an element, only those that you want returned.
 2. You can run the included unit tests by selecting `BiruniTests` as your target and building.
+3. Dates which conform to either RFC822 or RFC3399 will be returned as NSDate objects.
 
 ### Namesake
 <img src="http://upload.wikimedia.org/wikipedia/en/thumb/1/1e/Iran_Biruni.jpg/200px-Iran_Biruni.jpg" width="200" height="145" alt="Abu Rayhan Biruni" align="right">[Abu Rayhan Biruni](http://en.wikipedia.org/wiki/Abu_Rayhan_Biruni) was a Persian scholar who lived a thousand years ago during the Islamic Golden Age. Known for his work in [geodesy](http://en.wikipedia.org/wiki/History_of_geodesy#Biruni), Biruni pioneered the use of trigonometric functions in accurately calculating distances between locations.<br/><br/>Having a desire to improve upon previous measurements of the diameter of the Earth but wanting to avoid "walking across hot, dusty deserts", he came up with a new method using only a primitive tool known as an astrolabe and the power of his intellect. With these he was able to measure the diameter of the Earth to within ten miles of modern measurements, an amazing feat.
