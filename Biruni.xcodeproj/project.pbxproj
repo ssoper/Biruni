@@ -7,16 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8D8F455D12B960C400386200 /* Biruni.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D8F455B12B960C400386200 /* Biruni.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8D8F455E12B960C400386200 /* Biruni.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8F455C12B960C400386200 /* Biruni.m */; };
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
 		8DCDA62212BEB4E30045131A /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DCDA62112BEB4E30045131A /* SenTestingKit.framework */; };
 		8DCDA62312BEB4F10045131A /* Biruni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* Biruni.framework */; };
 		8DCDA7F612C004050045131A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
-		8DEEE04912C268FA00B24C59 /* BiruniFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DEEE01312C2498100B24C59 /* BiruniFormatter.h */; };
-		8DEEE04A12C268FD00B24C59 /* BiruniFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DEEE01412C2498100B24C59 /* BiruniFormatter.m */; };
 		8DEEE0B812C2842100B24C59 /* UnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DEEE0B012C283FD00B24C59 /* UnitTests.m */; };
 		8DEEE0BB12C2842700B24C59 /* Feed.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8DEEE0B212C2840B00B24C59 /* Feed.xml */; };
+		8DEEE0E412C28CAC00B24C59 /* Biruni.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DEEE0D812C28C9600B24C59 /* Biruni.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8DEEE0E512C28CAC00B24C59 /* BiruniFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DEEE0DA12C28C9600B24C59 /* BiruniFormatter.h */; };
+		8DEEE0E712C28CB100B24C59 /* Biruni.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DEEE0D912C28C9600B24C59 /* Biruni.m */; };
+		8DEEE0E812C28CB100B24C59 /* BiruniFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DEEE0DB12C28C9600B24C59 /* BiruniFormatter.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,18 +33,18 @@
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		089C1667FE841158C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		32DBCF5E0370ADEE00C91783 /* Biruni_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Biruni_Prefix.pch; sourceTree = "<group>"; };
-		8D8F455B12B960C400386200 /* Biruni.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Biruni.h; sourceTree = "<group>"; };
-		8D8F455C12B960C400386200 /* Biruni.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Biruni.m; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* Biruni.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Biruni.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DCDA5EA12BEB2DE0045131A /* BiruniTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BiruniTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DCDA5EB12BEB2DE0045131A /* BiruniTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BiruniTests-Info.plist"; sourceTree = "<group>"; };
 		8DCDA62112BEB4E30045131A /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		8DEEE01312C2498100B24C59 /* BiruniFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BiruniFormatter.h; sourceTree = "<group>"; };
-		8DEEE01412C2498100B24C59 /* BiruniFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BiruniFormatter.m; sourceTree = "<group>"; };
 		8DEEE0AF12C283FD00B24C59 /* UnitTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnitTests.h; path = Tests/UnitTests.h; sourceTree = "<group>"; };
 		8DEEE0B012C283FD00B24C59 /* UnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UnitTests.m; path = Tests/UnitTests.m; sourceTree = "<group>"; };
 		8DEEE0B212C2840B00B24C59 /* Feed.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Feed.xml; path = Tests/Feed.xml; sourceTree = "<group>"; };
+		8DEEE0D812C28C9600B24C59 /* Biruni.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Biruni.h; path = Classes/Biruni.h; sourceTree = "<group>"; };
+		8DEEE0D912C28C9600B24C59 /* Biruni.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Biruni.m; path = Classes/Biruni.m; sourceTree = "<group>"; };
+		8DEEE0DA12C28C9600B24C59 /* BiruniFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BiruniFormatter.h; path = Classes/BiruniFormatter.h; sourceTree = "<group>"; };
+		8DEEE0DB12C28C9600B24C59 /* BiruniFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BiruniFormatter.m; path = Classes/BiruniFormatter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,10 +112,10 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				8D8F455B12B960C400386200 /* Biruni.h */,
-				8D8F455C12B960C400386200 /* Biruni.m */,
-				8DEEE01312C2498100B24C59 /* BiruniFormatter.h */,
-				8DEEE01412C2498100B24C59 /* BiruniFormatter.m */,
+				8DEEE0D812C28C9600B24C59 /* Biruni.h */,
+				8DEEE0D912C28C9600B24C59 /* Biruni.m */,
+				8DEEE0DA12C28C9600B24C59 /* BiruniFormatter.h */,
+				8DEEE0DB12C28C9600B24C59 /* BiruniFormatter.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -169,8 +169,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D8F455D12B960C400386200 /* Biruni.h in Headers */,
-				8DEEE04912C268FA00B24C59 /* BiruniFormatter.h in Headers */,
+				8DEEE0E412C28CAC00B24C59 /* Biruni.h in Headers */,
+				8DEEE0E512C28CAC00B24C59 /* BiruniFormatter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,8 +281,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D8F455E12B960C400386200 /* Biruni.m in Sources */,
-				8DEEE04A12C268FD00B24C59 /* BiruniFormatter.m in Sources */,
+				8DEEE0E712C28CB100B24C59 /* Biruni.m in Sources */,
+				8DEEE0E812C28CB100B24C59 /* BiruniFormatter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
