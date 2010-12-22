@@ -155,7 +155,7 @@
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
   if (!self.process && (self.currentPath.count == (self.targetDepth - 1))) {
-    [self.results addObject: [[NSMutableDictionary alloc] initWithDictionary: currentData]];
+    [self.results addObject: [NSMutableDictionary dictionaryWithDictionary: currentData]];
     [currentData release];
     currentData = [[NSMutableDictionary alloc] init];
   }
@@ -176,9 +176,9 @@
         tmpValues = [[NSMutableArray alloc] initWithObjects: [self.currentData objectForKey: key], nil];
       }
 
-      [[self.currentData objectForKey: key] release];
       [tmpValues addObject: finalText];
-      [self.currentData setObject: [[NSArray alloc] initWithArray: tmpValues]  forKey: key];
+      [self.currentData setObject: [NSArray arrayWithArray: tmpValues] forKey: key];
+      [tmpValues release];
     } else {
       [self.currentData setObject: finalText forKey: (NSString *)[self.currentPath lastObject]];
     }
@@ -193,7 +193,7 @@
 - (void)parserDidEndDocument:(NSXMLParser *)parser {
   [currentData release];
 
-  NSArray *final = [NSArray arrayWithArray: results];
+  NSArray *final = [NSArray arrayWithArray: self.results];
   [results release];
   [parser release];
 
