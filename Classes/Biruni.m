@@ -149,6 +149,27 @@
   self.process = YES;
 }
 
+- (void)parser:(NSXMLParser *)parser foundCDATA:(NSData *)CDATABlock {
+
+  if (!self.process)
+    return;
+
+  NSString *buffer = nil;
+
+  @try {
+    buffer = [[NSString alloc] initWithData:CDATABlock encoding:NSUTF8StringEncoding];
+    if (!buffer)
+      buffer = [[NSString alloc] initWithData:CDATABlock encoding:NSISOLatin1StringEncoding];
+    if (buffer)
+      [currentText appendString:buffer];
+  } @catch (NSException * e) {
+    // Do nothing
+  } @finally {
+    if (buffer)
+      [buffer release];
+  }
+}
+
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
   if (self.process) {
     [self.currentText appendString: string];
