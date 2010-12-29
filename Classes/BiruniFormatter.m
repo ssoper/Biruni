@@ -28,18 +28,23 @@
 
 @implementation BiruniFormatter
 
-@synthesize kDateTagsRFC822, kDateTagsRFC3399, dateFormatter;
-
 - (id) init {
   if (self = [super init]) {
-    self.kDateTagsRFC822 = [[NSArray alloc] initWithObjects: @"pubDate", nil];
-    self.kDateTagsRFC3399 = [[NSArray alloc] initWithObjects: @"dc:date", @"published", @"updated", nil];
+    NSArray *rfc822 = [[NSArray alloc] initWithObjects: @"pubDate", nil]; 
+    kDateTagsRFC822 = [rfc822 retain];
+    [rfc822 release];
+
+    NSArray *rfc3399 = [[NSArray alloc] initWithObjects: @"dc:date", @"published", @"updated", nil];
+    kDateTagsRFC3399 = [rfc3399 retain];
+    [rfc3399 release];
 
     NSLocale *en_US_POSIX = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-    self.dateFormatter = [[NSDateFormatter alloc] init];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    dateFormatter = [formatter retain];
     [dateFormatter setLocale:en_US_POSIX];
     [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
     [en_US_POSIX release];
+    [formatter release];
   }
 
   return self;
@@ -126,7 +131,7 @@
   NSMutableSet *matches;
   BOOL result;
   
-  matches = [[NSMutableSet alloc] initWithArray: self.kDateTagsRFC822];
+  matches = [[NSMutableSet alloc] initWithArray: kDateTagsRFC822];
   [matches filterUsingPredicate:[NSPredicate predicateWithFormat:@"SELF MATCHES %@", tag]];
   result = (matches.count > 0);
   [matches release];
@@ -134,7 +139,7 @@
   if (result)
     return BiruniDateFormatRFC822;
   
-  matches = [[NSMutableSet alloc] initWithArray: self.kDateTagsRFC3399];
+  matches = [[NSMutableSet alloc] initWithArray: kDateTagsRFC3399];
   [matches filterUsingPredicate:[NSPredicate predicateWithFormat:@"SELF MATCHES %@", tag]];
   result = (matches.count > 0);
   [matches release];
@@ -158,7 +163,6 @@
 }
 
 - (void) dealloc {
-  NSLog(@"and here?");
   [kDateTagsRFC822 release];
   [kDateTagsRFC3399 release];
   [dateFormatter release];

@@ -36,9 +36,6 @@ typedef enum {
   NSDateFormatter *dateFormatter;
 }
 
-@property (nonatomic, assign) NSArray *kDateTagsRFC822, *kDateTagsRFC3399;
-@property (nonatomic, assign) NSDateFormatter *dateFormatter;
-
 - (NSUInteger) dateTag:(NSString *) tag;
 - (id) parseDate:(NSString *) strDate
       dateFormat:(NSUInteger) dateFormat;
