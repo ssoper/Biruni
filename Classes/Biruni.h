@@ -43,18 +43,14 @@
 @property (nonatomic, retain) NSArray *tagsToParse;
 @property (copy) void (^afterParse)(NSArray *);
 
-@property (nonatomic, retain) NSMutableArray *currentPath, *results;
-@property (nonatomic, retain) NSMutableDictionary *currentData;
-@property (nonatomic, retain) NSMutableString *currentText;
-@property (nonatomic, retain) BiruniFormatter *formatter;
 @property (nonatomic, assign) BOOL process;
 @property (nonatomic, assign) NSUInteger targetDepth;
 
-+ (void) parseData:(NSData *) data
-              tags:(NSString *) tags
-             block:(void(^)(NSArray *)) block;
++ (id) parseData:(NSData *) data
+            tags:(NSString *) tags
+           block:(void(^)(NSArray *)) block;
 
-+ (void) parseURL:(NSString *) url
-             tags:(NSString *) tags
-            block:(void(^)(NSArray *)) block;
++ (id) parseURL:(NSString *) url
+           tags:(NSString *) tags
+          block:(void(^)(NSArray *)) block;
 @end

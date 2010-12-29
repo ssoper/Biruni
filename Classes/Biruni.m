@@ -30,7 +30,7 @@
 @implementation Biruni
 
 @synthesize tagsToParse, afterParse;
-@synthesize currentPath, results, currentData, currentText, formatter, process, targetDepth;
+@synthesize process, targetDepth;
 
 
 #pragma mark -
@@ -40,9 +40,9 @@
             andBlock:(void(^)(NSArray *)) block {
   if (self = [super init]) {
     self.tagsToParse = _tagsToParse;
+    [_tagsToParse release];
+
     self.afterParse = block;
-    self.results = [[NSMutableArray alloc] init];
-    self.formatter = [[BiruniFormatter alloc] init];
   }
 
   return self;
@@ -90,32 +90,32 @@
     NSString *trimmedTag = [tag stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
     [tmpTags addObject: trimmedTag];
   }
-  NSArray *_tags = [NSArray arrayWithArray: tmpTags];
+
+  NSArray *finalTags = [[NSArray alloc] initWithArray: tmpTags];
   [tmpTags release];
 
-  return _tags;
+  return finalTags;
 }
 
 
 #pragma mark -
 #pragma mark Public class methods
 
-+ (void) parseData:(NSData *) data
-              tags:(NSString *) tags
-             block:(void(^)(NSArray *)) block {
-  [[[Biruni alloc] initWithData: data
-                       andArray: [self parseTags: tags]
-                       andBlock: block]
-   autorelease];
++ (id) parseData:(NSData *) data
+            tags:(NSString *) tags
+           block:(void(^)(NSArray *)) block {
+  return [[Biruni alloc] initWithData: data
+                             andArray: [self parseTags: tags]
+                             andBlock: block];
+
 }
 
-+ (void) parseURL:(NSString *) url
-             tags:(NSString *) tags
-            block:(void(^)(NSArray *)) block {
-  [[[Biruni alloc] initWithUrl: [NSURL URLWithString: url]
-                      andArray: [self parseTags: tags]
-                      andBlock: block]
-   autorelease];
++ (id) parseURL:(NSString *) url
+           tags:(NSString *) tags
+          block:(void(^)(NSArray *)) block {
+  return [[Biruni alloc] initWithUrl: [NSURL URLWithString: url]
+                            andArray: [self parseTags: tags]
+                            andBlock: block];
 }
 
 
@@ -123,29 +123,46 @@
 #pragma mark NSXMLParserDelegate
 
 - (void)parserDidStartDocument:(NSXMLParser *)parser {
-  self.currentPath = [[NSMutableArray alloc] init];
-  self.currentData = [[NSMutableDictionary alloc] init];
+  NSMutableArray *_currentPath = [[NSMutableArray alloc] init];
+  currentPath = [_currentPath retain];
+  [_currentPath release];
+
+  NSMutableDictionary *_currentData = [[NSMutableDictionary alloc] init];
+  currentData = [_currentData retain];
+  [_currentData release];
+
+  NSMutableArray *_results = [[NSMutableArray alloc] init];
+  results = [_results retain];
+  [_results release];  
+
+  BiruniFormatter *_formatter = [[BiruniFormatter alloc] init];
+  formatter = [_formatter retain];
+  [_formatter release];
+
   self.process = NO;
   self.targetDepth = 0;
 }
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qualifiedName attributes:(NSDictionary *)attributeDict {
 
-  [self.currentPath addObject: qualifiedName];
+  [currentPath addObject: qualifiedName];
 
   // We've found a matching tag so this must be our target depth
   if (self.targetDepth == 0 && [self tagMatch: qualifiedName])
-    self.targetDepth = self.currentPath.count;
+    self.targetDepth = currentPath.count;
 
   // Wrong depth
-  if (self.targetDepth != self.currentPath.count)
+  if (self.targetDepth != currentPath.count)
     return;
 
   // Tag doesn't match
   if (![self tagMatch: qualifiedName])
     return;
 
-  self.currentText = [[NSMutableString alloc] init];
+  NSMutableString *_currentText = [[NSMutableString alloc] init];
+  currentText = [_currentText retain];
+  [_currentText release];
+
   self.process = YES;
 }
 
@@ -172,51 +189,55 @@
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
   if (self.process) {
-    [self.currentText appendString: string];
+    [currentText appendString: string];
   }
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
-  if (!self.process && (self.currentPath.count == (self.targetDepth - 1))) {
-    [self.results addObject: [NSMutableDictionary dictionaryWithDictionary: currentData]];
+  NSMutableDictionary *_currentData;
+
+  if (!self.process && (currentPath.count == (self.targetDepth - 1))) {
+    [results addObject: [NSMutableDictionary dictionaryWithDictionary: currentData]];
     [currentData release];
-    currentData = [[NSMutableDictionary alloc] init];
+    _currentData = [[NSMutableDictionary alloc] init];
+    currentData = [_currentData retain];
+    [_currentData release];
   }
 
   if (self.process) {
     id finalObj = nil;
-    NSString *key = (NSString *)[self.currentPath lastObject];
-    NSUInteger dateFormat = [self.formatter dateTag: qName];
+    NSString *key = (NSString *)[currentPath lastObject];
+    NSUInteger dateFormat = [formatter dateTag: qName];
 
     if (dateFormat != BiruniDateFormatNil)
-      finalObj = [self.formatter parseDate: currentText dateFormat: dateFormat];
+      finalObj = [formatter parseDate: currentText dateFormat: dateFormat];
 
     if (!finalObj)
       finalObj = [NSString stringWithString: currentText];
 
-    if ([self.currentData objectForKey: key] != nil) {
+    if ([currentData objectForKey: key] != nil) {
       // Multiple values exist for this tag
       NSMutableArray *tmpValues;
 
-      if ([[self.currentData objectForKey: key] isKindOfClass: [NSArray class]]) {
+      if ([[currentData objectForKey: key] isKindOfClass: [NSArray class]]) {
         // We already have this object as an NSArray and simply need to append this value
-        tmpValues = [[NSMutableArray alloc] initWithArray: [self.currentData objectForKey: key]];
+        tmpValues = [[NSMutableArray alloc] initWithArray: [currentData objectForKey: key]];
       } else {
         // Just a single NSString exists for this tag
-        tmpValues = [[NSMutableArray alloc] initWithObjects: [self.currentData objectForKey: key], nil];
+        tmpValues = [[NSMutableArray alloc] initWithObjects: [currentData objectForKey: key], nil];
       }
 
       [tmpValues addObject: finalObj];
-      [self.currentData setObject: [NSArray arrayWithArray: tmpValues] forKey: key];
+      [currentData setObject: [NSArray arrayWithArray: tmpValues] forKey: key];
       [tmpValues release];
     } else {
-      [self.currentData setObject: finalObj forKey: (NSString *)[self.currentPath lastObject]];
+      [currentData setObject: finalObj forKey: (NSString *)[currentPath lastObject]];
     }
 
     [currentText release];
   }
 
-  [self.currentPath removeLastObject];
+  [currentPath removeLastObject];
   self.process = NO;
 }
 
@@ -224,7 +245,7 @@
   [currentData release];
   [currentPath release];
 
-  NSArray *final = [NSArray arrayWithArray: self.results];
+  NSArray *final = [NSArray arrayWithArray: results];
   [results release];
   [parser release];
 
@@ -232,9 +253,9 @@
 }
 
 - (void) dealloc {
+  [formatter release];
   [tagsToParse release];
   [afterParse release];
-  [formatter release];
 
   [super dealloc];
 }

@@ -31,16 +31,16 @@
 @synthesize kDateTagsRFC822, kDateTagsRFC3399, dateFormatter;
 
 - (id) init {
-  self = [super init];
+  if (self = [super init]) {
+    self.kDateTagsRFC822 = [[NSArray alloc] initWithObjects: @"pubDate", nil];
+    self.kDateTagsRFC3399 = [[NSArray alloc] initWithObjects: @"dc:date", @"published", @"updated", nil];
 
-  self.kDateTagsRFC822 = [[NSArray alloc] initWithObjects: @"pubDate", nil];
-  self.kDateTagsRFC3399 = [[NSArray alloc] initWithObjects: @"dc:date", @"published", @"updated", nil];
-
-  NSLocale *en_US_POSIX = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-  self.dateFormatter = [[NSDateFormatter alloc] init];
-	[dateFormatter setLocale:en_US_POSIX];
-	[dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
-	[en_US_POSIX release];
+    NSLocale *en_US_POSIX = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    self.dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setLocale:en_US_POSIX];
+    [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+    [en_US_POSIX release];
+  }
 
   return self;
 }
@@ -158,6 +158,7 @@
 }
 
 - (void) dealloc {
+  NSLog(@"and here?");
   [kDateTagsRFC822 release];
   [kDateTagsRFC3399 release];
   [dateFormatter release];
