@@ -29,7 +29,7 @@
 
 @implementation Biruni
 
-@synthesize tagsToParse, afterParse;
+@synthesize tagsToParse, container, afterParse;
 @synthesize process, targetDepth;
 
 
@@ -37,11 +37,13 @@
 #pragma mark Private
 
 - (id) initWithArray:(NSArray *) _tagsToParse
+        andContainer:(NSString *) _container
             andBlock:(void(^)(NSArray *)) block {
   if (self = [super init]) {
     self.tagsToParse = _tagsToParse;
     [_tagsToParse release];
 
+    self.container = _container;
     self.afterParse = block;
   }
 
@@ -50,8 +52,9 @@
 
 - (id) initWithData:(NSData *) _data
            andArray:(NSArray *) _tagsToParse
+       andContainer:(NSString *) _container
            andBlock:(void(^)(NSArray *)) block {
-  if (self = [self initWithArray: _tagsToParse andBlock: block]) {
+  if (self = [self initWithArray: _tagsToParse andContainer: _container andBlock: block]) {
     NSXMLParser *parser = [[NSXMLParser alloc] initWithData: _data];
     parser.delegate = self;
     [parser setShouldProcessNamespaces: YES];
@@ -63,8 +66,9 @@
 
 - (id) initWithUrl:(NSURL *) _url
           andArray:(NSArray *) _tagsToParse
+      andContainer:(NSString *) _container
           andBlock:(void(^)(NSArray *)) block {
-  if (self = [self initWithArray: _tagsToParse andBlock: block]) {
+  if (self = [self initWithArray: _tagsToParse andContainer: _container andBlock: block]) {
     NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL: _url];
     parser.delegate = self;
     [parser setShouldProcessNamespaces: YES];
@@ -81,6 +85,16 @@
   BOOL result = (matches.count > 0);
   [matches release];
 
+  return result;
+}
+
+- (BOOL) inContainer {
+  NSMutableSet *matches = [[NSMutableSet alloc] initWithArray: currentPath];
+  [matches filterUsingPredicate:[NSPredicate predicateWithFormat:@"SELF MATCHES %@", self.container]];
+  
+  BOOL result = (matches.count > 0);
+  [matches release];
+  
   return result;
 }
 
@@ -103,19 +117,35 @@
 
 + (id) parseData:(NSData *) data
             tags:(NSString *) tags
+       container:(NSString *) _container
            block:(void(^)(NSArray *)) block {
   return [[Biruni alloc] initWithData: data
                              andArray: [self parseTags: tags]
+                         andContainer: _container
                              andBlock: block];
 
 }
 
 + (id) parseURL:(NSString *) url
            tags:(NSString *) tags
+      container:(NSString *) _container
           block:(void(^)(NSArray *)) block {
   return [[Biruni alloc] initWithUrl: [NSURL URLWithString: url]
                             andArray: [self parseTags: tags]
+                        andContainer: _container
                             andBlock: block];
+}
+
++ (id) parseData:(NSData *) data
+            tags:(NSString *) tags
+           block:(void(^)(NSArray *)) block {
+  return [Biruni parseData: data tags: tags container: nil block:block];
+}
+
++ (id) parseURL:(NSString *) url
+           tags:(NSString *) tags
+          block:(void(^)(NSArray *)) block {
+  return [Biruni parseURL: url tags:tags container: nil block: block];
 }
 
 
@@ -146,6 +176,22 @@
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qualifiedName attributes:(NSDictionary *)attributeDict {
 
   [currentPath addObject: qualifiedName];
+
+  // Items to parse must be under a specific container
+  if (self.container) {
+
+    // We've not yet found our target depth
+    if (self.targetDepth == 0) {
+
+      // Still not deep enough to find our container
+      if (![self inContainer])
+        return;
+
+      // We've found a matching tag in the appropriate container
+      if ([self tagMatch: qualifiedName])
+        self.targetDepth = currentPath.count;
+    }
+  }
 
   // We've found a matching tag so this must be our target depth
   if (self.targetDepth == 0 && [self tagMatch: qualifiedName])
@@ -242,6 +288,7 @@
 }
 
 - (void)parserDidEndDocument:(NSXMLParser *)parser {
+  [formatter release];
   [currentData release];
   [currentPath release];
 
@@ -253,8 +300,8 @@
 }
 
 - (void) dealloc {
-  [formatter release];
   [tagsToParse release];
+  [container release];
   [afterParse release];
 
   [super dealloc];

@@ -29,8 +29,9 @@
 
 @interface Biruni : NSObject <NSXMLParserDelegate> {
   NSArray *tagsToParse;
+  NSString *container;
   void (^afterParse)(NSArray *);
-
+  
 @private
   NSMutableArray *currentPath, *results;
   NSMutableDictionary *currentData;
@@ -41,6 +42,7 @@
 }
 
 @property (nonatomic, retain) NSArray *tagsToParse;
+@property (nonatomic, retain) NSString *container;
 @property (copy) void (^afterParse)(NSArray *);
 
 @property (nonatomic, assign) BOOL process;
@@ -52,5 +54,15 @@
 
 + (id) parseURL:(NSString *) url
            tags:(NSString *) tags
+          block:(void(^)(NSArray *)) block;
+
++ (id) parseData:(NSData *) data
+            tags:(NSString *) tags
+       container:(NSString *) _container
+           block:(void(^)(NSArray *)) block;
+
++ (id) parseURL:(NSString *) url
+           tags:(NSString *) tags
+       container:(NSString *) _container
           block:(void(^)(NSArray *)) block;
 @end
