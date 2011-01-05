@@ -30,7 +30,7 @@
 @implementation Biruni
 
 @synthesize tagsToParse, container, afterParse;
-@synthesize process, targetDepth;
+@synthesize process, targetDepth, parser;
 
 
 #pragma mark -
@@ -55,10 +55,13 @@
        andContainer:(NSString *) _container
            andBlock:(void(^)(NSArray *)) block {
   if (self = [self initWithArray: _tagsToParse andContainer: _container andBlock: block]) {
-    NSXMLParser *parser = [[NSXMLParser alloc] initWithData: _data];
-    parser.delegate = self;
-    [parser setShouldProcessNamespaces: YES];
-    [parser parse];
+    NSXMLParser *_parser = [[NSXMLParser alloc] initWithData: _data];
+    self.parser = _parser;
+    [_parser release];
+
+    self.parser.delegate = self;
+    [self.parser setShouldProcessNamespaces: YES];
+    [self.parser parse];
   }
 
   return self;
@@ -69,10 +72,13 @@
       andContainer:(NSString *) _container
           andBlock:(void(^)(NSArray *)) block {
   if (self = [self initWithArray: _tagsToParse andContainer: _container andBlock: block]) {
-    NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL: _url];
-    parser.delegate = self;
-    [parser setShouldProcessNamespaces: YES];
-    [parser parse];
+    NSXMLParser *_parser = [[NSXMLParser alloc] initWithContentsOfURL: _url];
+    self.parser = _parser;
+    [_parser release];
+
+    self.parser.delegate = self;
+    [self.parser setShouldProcessNamespaces: YES];
+    [self.parser parse];
   }
 
   return self;
@@ -157,9 +163,9 @@
   currentPath = [_currentPath retain];
   [_currentPath release];
 
-  NSMutableDictionary *_currentData = [[NSMutableDictionary alloc] init];
-  currentDict = [_currentData retain];
-  [_currentData release];
+  NSMutableDictionary *_currentDict = [[NSMutableDictionary alloc] init];
+  currentDict = [_currentDict retain];
+  [_currentDict release];
 
   NSMutableArray *_results = [[NSMutableArray alloc] init];
   results = [_results retain];
@@ -227,14 +233,14 @@
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
-  NSMutableDictionary *_currentData;
+  NSMutableDictionary *_currentDict;
 
   if (!self.process && (currentPath.count == (self.targetDepth - 1))) {
     [results addObject: [NSMutableDictionary dictionaryWithDictionary: currentDict]];
     [currentDict release];
-    _currentData = [[NSMutableDictionary alloc] init];
-    currentDict = [_currentData retain];
-    [_currentData release];
+    _currentDict = [[NSMutableDictionary alloc] init];
+    currentDict = [_currentDict retain];
+    [_currentDict release];
   }
 
   if (self.process) {
@@ -283,7 +289,6 @@
 
   NSArray *final = [NSArray arrayWithArray: results];
   [results release];
-  [parser release];
 
   self.afterParse(final);
 }
@@ -292,6 +297,7 @@
   [tagsToParse release];
   [container release];
   [afterParse release];
+  [parser release];
 
   [super dealloc];
 }

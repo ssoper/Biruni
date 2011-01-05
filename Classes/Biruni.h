@@ -39,6 +39,7 @@
   BiruniFormatter *formatter;
   BOOL process;
   NSUInteger targetDepth;
+  NSXMLParser *parser;
 }
 
 @property (nonatomic, retain) NSArray *tagsToParse;
@@ -47,6 +48,7 @@
 
 @property (nonatomic, assign) BOOL process;
 @property (nonatomic, assign) NSUInteger targetDepth;
+@property (nonatomic, retain) NSXMLParser *parser;
 
 + (id) parseData:(NSData *) data
             tags:(NSString *) tags
