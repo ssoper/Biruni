@@ -158,7 +158,7 @@
   [_currentPath release];
 
   NSMutableDictionary *_currentData = [[NSMutableDictionary alloc] init];
-  currentData = [_currentData retain];
+  currentDict = [_currentData retain];
   [_currentData release];
 
   NSMutableArray *_results = [[NSMutableArray alloc] init];
@@ -205,9 +205,9 @@
   if (![self tagMatch: qualifiedName])
     return;
 
-  NSMutableString *_currentText = [[NSMutableString alloc] init];
-  currentText = [_currentText retain];
-  [_currentText release];
+  NSMutableData *_currentData = [[NSMutableData alloc] init];
+  currentData = [_currentData retain];
+  [_currentData release];
 
   self.process = YES;
 }
@@ -217,25 +217,12 @@
   if (!self.process)
     return;
 
-  NSString *buffer = nil;
-
-  @try {
-    buffer = [[NSString alloc] initWithData:CDATABlock encoding:NSUTF8StringEncoding];
-    if (!buffer)
-      buffer = [[NSString alloc] initWithData:CDATABlock encoding:NSISOLatin1StringEncoding];
-    if (buffer)
-      [currentText appendString:buffer];
-  } @catch (NSException * e) {
-    // Do nothing
-  } @finally {
-    if (buffer)
-      [buffer release];
-  }
+  [currentData appendData: CDATABlock];
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
   if (self.process) {
-    [currentText appendString: string];
+    [currentData appendData: [string dataUsingEncoding: NSUTF8StringEncoding]];
   }
 }
 
@@ -243,10 +230,10 @@
   NSMutableDictionary *_currentData;
 
   if (!self.process && (currentPath.count == (self.targetDepth - 1))) {
-    [results addObject: [NSMutableDictionary dictionaryWithDictionary: currentData]];
-    [currentData release];
+    [results addObject: [NSMutableDictionary dictionaryWithDictionary: currentDict]];
+    [currentDict release];
     _currentData = [[NSMutableDictionary alloc] init];
-    currentData = [_currentData retain];
+    currentDict = [_currentData retain];
     [_currentData release];
   }
 
@@ -254,33 +241,35 @@
     id finalObj = nil;
     NSString *key = (NSString *)[currentPath lastObject];
     NSUInteger dateFormat = [formatter dateTag: qName];
+    NSString *tmpStr = [[NSString alloc] initWithData: currentData encoding: NSUTF8StringEncoding];
 
     if (dateFormat != BiruniDateFormatNil)
-      finalObj = [formatter parseDate: currentText dateFormat: dateFormat];
+      finalObj = [formatter parseDate: tmpStr dateFormat: dateFormat];
 
     if (!finalObj)
-      finalObj = [NSString stringWithString: currentText];
+      finalObj = [NSString stringWithString: tmpStr];
 
-    if ([currentData objectForKey: key] != nil) {
+    if ([currentDict objectForKey: key] != nil) {
       // Multiple values exist for this tag
       NSMutableArray *tmpValues;
 
-      if ([[currentData objectForKey: key] isKindOfClass: [NSArray class]]) {
+      if ([[currentDict objectForKey: key] isKindOfClass: [NSArray class]]) {
         // We already have this object as an NSArray and simply need to append this value
-        tmpValues = [[NSMutableArray alloc] initWithArray: [currentData objectForKey: key]];
+        tmpValues = [[NSMutableArray alloc] initWithArray: [currentDict objectForKey: key]];
       } else {
         // Just a single NSString exists for this tag
-        tmpValues = [[NSMutableArray alloc] initWithObjects: [currentData objectForKey: key], nil];
+        tmpValues = [[NSMutableArray alloc] initWithObjects: [currentDict objectForKey: key], nil];
       }
 
       [tmpValues addObject: finalObj];
-      [currentData setObject: [NSArray arrayWithArray: tmpValues] forKey: key];
+      [currentDict setObject: [NSArray arrayWithArray: tmpValues] forKey: key];
       [tmpValues release];
     } else {
-      [currentData setObject: finalObj forKey: (NSString *)[currentPath lastObject]];
+      [currentDict setObject: finalObj forKey: (NSString *)[currentPath lastObject]];
     }
 
-    [currentText release];
+    [tmpStr release];
+    [currentData release];
   }
 
   [currentPath removeLastObject];
@@ -289,7 +278,7 @@
 
 - (void)parserDidEndDocument:(NSXMLParser *)parser {
   [formatter release];
-  [currentData release];
+  [currentDict release];
   [currentPath release];
 
   NSArray *final = [NSArray arrayWithArray: results];

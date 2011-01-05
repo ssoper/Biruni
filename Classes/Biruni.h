@@ -34,15 +34,15 @@
   
 @private
   NSMutableArray *currentPath, *results;
-  NSMutableDictionary *currentData;
-  NSMutableString *currentText;
+  NSMutableDictionary *currentDict;
+  NSMutableData *currentData;
   BiruniFormatter *formatter;
   BOOL process;
   NSUInteger targetDepth;
 }
 
 @property (nonatomic, retain) NSArray *tagsToParse;
-@property (nonatomic, retain) NSString *container;
+@property (nonatomic, copy) NSString *container;
 @property (copy) void (^afterParse)(NSArray *);
 
 @property (nonatomic, assign) BOOL process;
