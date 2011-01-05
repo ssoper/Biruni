@@ -296,4 +296,8 @@
   [super dealloc];
 }
 
+- (NSString *) description {
+  return [NSString stringWithFormat: @"%@ tags=%@ container=%@", [super description], [self.tagsToParse description], [self.container description]];
+}
+
 @end
