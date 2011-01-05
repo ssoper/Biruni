@@ -119,10 +119,10 @@
             tags:(NSString *) tags
        container:(NSString *) _container
            block:(void(^)(NSArray *)) block {
-  return [[Biruni alloc] initWithData: data
+  return [[[Biruni alloc] initWithData: data
                              andArray: [self parseTags: tags]
                          andContainer: _container
-                             andBlock: block];
+                              andBlock: block] autorelease];
 
 }
 
@@ -130,10 +130,10 @@
            tags:(NSString *) tags
       container:(NSString *) _container
           block:(void(^)(NSArray *)) block {
-  return [[Biruni alloc] initWithUrl: [NSURL URLWithString: url]
+  return [[[Biruni alloc] initWithUrl: [NSURL URLWithString: url]
                             andArray: [self parseTags: tags]
                         andContainer: _container
-                            andBlock: block];
+                             andBlock: block] autorelease];
 }
 
 + (id) parseData:(NSData *) data
