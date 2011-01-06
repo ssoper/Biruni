@@ -59,6 +59,8 @@
     self.parser = _parser;
     [_parser release];
 
+    NSLog(@"[Biruni] Parsing %u bytes", [_data length]);
+
     self.parser.delegate = self;
     [self.parser setShouldProcessNamespaces: YES];
     [self.parser parse];
@@ -75,6 +77,8 @@
     NSXMLParser *_parser = [[NSXMLParser alloc] initWithContentsOfURL: _url];
     self.parser = _parser;
     [_parser release];
+
+    NSLog(@"[Biruni] Parsing %@", _url);
 
     self.parser.delegate = self;
     [self.parser setShouldProcessNamespaces: YES];
