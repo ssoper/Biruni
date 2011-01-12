@@ -88,9 +88,30 @@
   return self;
 }
 
-- (BOOL) tagMatch:(NSString *) tag {
+- (BOOL) currentPathMatch {
+  // Get tags with paths
+  NSIndexSet *tagsWithPaths = [self.tagsToParse indexesOfObjectsPassingTest: ^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+    return ([(NSString *)obj rangeOfString: @"/"].length > 0);
+  }];
+
+  if (tagsWithPaths.count == 0)
+    return NO;
+
+  __block BOOL match = NO;
+  NSString *tokenizedPath = [currentPath componentsJoinedByString: @"/"];
+
+  // Of the tags with paths, find the one that matches the suffix of the current path
+  [tagsWithPaths enumerateIndexesUsingBlock: ^(NSUInteger idx, BOOL *stop) {
+    NSString *suffix = (NSString *)[self.tagsToParse objectAtIndex: idx];
+    *stop = match = [tokenizedPath hasSuffix: suffix];
+  }];
+
+  return match;
+}
+
+- (BOOL) currentTagMatch {
   NSMutableSet *matches = [[NSMutableSet alloc] initWithArray: self.tagsToParse];
-  [matches filterUsingPredicate:[NSPredicate predicateWithFormat:@"SELF MATCHES %@", tag]];
+  [matches filterUsingPredicate:[NSPredicate predicateWithFormat:@"SELF MATCHES %@", [currentPath lastObject]]];
 
   BOOL result = (matches.count > 0);
   [matches release];
@@ -198,21 +219,21 @@
         return;
 
       // We've found a matching tag in the appropriate container
-      if ([self tagMatch: qualifiedName])
+      if ([self currentTagMatch])
         self.targetDepth = currentPath.count;
     }
   }
 
   // We've found a matching tag so this must be our target depth
-  if (self.targetDepth == 0 && [self tagMatch: qualifiedName])
+  if (self.targetDepth == 0 && [self currentTagMatch])
     self.targetDepth = currentPath.count;
 
-  // Wrong depth
-  if (self.targetDepth != currentPath.count)
+  // Tag matches but Wrong depth
+  if ([self currentTagMatch] && self.targetDepth < currentPath.count)
     return;
 
   // Tag doesn't match
-  if (![self tagMatch: qualifiedName])
+  if (![self currentTagMatch] && ![self currentPathMatch])
     return;
 
   NSMutableData *_currentData = [[NSMutableData alloc] init];
