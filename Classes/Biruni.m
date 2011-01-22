@@ -196,6 +196,8 @@
   results = [_results retain];
   [_results release];  
 
+  currentAttributes = nil;
+
   BiruniFormatter *_formatter = [[BiruniFormatter alloc] init];
   formatter = [_formatter retain];
   [_formatter release];
@@ -240,6 +242,8 @@
   currentData = [_currentData retain];
   [_currentData release];
 
+  currentAttributes = [attributeDict retain];
+
   self.process = YES;
 }
 
@@ -277,8 +281,15 @@
     if (dateFormat != BiruniDateFormatNil)
       finalObj = [formatter parseDate: tmpStr dateFormat: dateFormat];
 
-    if (!finalObj)
-      finalObj = [NSString stringWithString: tmpStr];
+    if (!finalObj) {
+      if (tmpStr.length == 0 && [currentAttributes count] > 0) {
+        // An empty element with tag attributes
+        finalObj = [currentAttributes copy];
+      } else {
+        // A normal element with data
+        finalObj = [NSString stringWithString: tmpStr];
+      }
+    }
 
     if ([currentDict objectForKey: key] != nil) {
       // Multiple values exist for this tag
@@ -300,6 +311,7 @@
     }
 
     [tmpStr release];
+    [currentAttributes release];
     [currentData release];
   }
 

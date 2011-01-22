@@ -40,6 +40,7 @@
   BOOL process;
   NSUInteger targetDepth;
   NSXMLParser *parser;
+  NSDictionary *currentAttributes;
 }
 
 @property (nonatomic, retain) NSArray *tagsToParse;
