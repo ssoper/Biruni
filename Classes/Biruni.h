@@ -35,12 +35,14 @@
 @private
   NSMutableArray *currentPath, *results;
   NSMutableDictionary *currentDict;
-  NSMutableData *currentData;
+  NSMutableData *currentData, *responseData;
   BiruniFormatter *formatter;
   BOOL process;
   NSUInteger targetDepth;
   NSXMLParser *parser;
   NSDictionary *currentAttributes;
+  NSURLConnection *urlConnection;
+  NSUInteger responseHttpCode;
 }
 
 @property (nonatomic, retain) NSArray *tagsToParse;

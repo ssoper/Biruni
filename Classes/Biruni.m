@@ -26,6 +26,11 @@
 #import "Biruni.h"
 #import "BiruniFormatter.h"
 
+static const NSUInteger kBiruniTimeout         = 30;
+static const NSUInteger kBiruniHttpNotFound    = 404;
+static const NSUInteger kBiruniHttpBadResponse = 500;
+
+static NSString*  kBiruniUserAgent       = @"Biruni RSS parser";
 
 @implementation Biruni
 
@@ -50,20 +55,24 @@
   return self;
 }
 
+- (void) initParser:(NSData *) data {
+  NSXMLParser *_parser = [[NSXMLParser alloc] initWithData: data];
+  self.parser = _parser;
+  [_parser release];
+
+  NSLog(@"[Biruni] Parsing %u bytes", [data length]);
+
+  self.parser.delegate = self;
+  [self.parser setShouldProcessNamespaces: YES];
+  [self.parser parse];
+}
+
 - (id) initWithData:(NSData *) _data
            andArray:(NSArray *) _tagsToParse
        andContainer:(NSString *) _container
            andBlock:(void(^)(NSArray *)) block {
   if (self = [self initWithArray: _tagsToParse andContainer: _container andBlock: block]) {
-    NSXMLParser *_parser = [[NSXMLParser alloc] initWithData: _data];
-    self.parser = _parser;
-    [_parser release];
-
-    NSLog(@"[Biruni] Parsing %u bytes", [_data length]);
-
-    self.parser.delegate = self;
-    [self.parser setShouldProcessNamespaces: YES];
-    [self.parser parse];
+    [self initParser: _data];
   }
 
   return self;
@@ -74,15 +83,15 @@
       andContainer:(NSString *) _container
           andBlock:(void(^)(NSArray *)) block {
   if (self = [self initWithArray: _tagsToParse andContainer: _container andBlock: block]) {
-    NSXMLParser *_parser = [[NSXMLParser alloc] initWithContentsOfURL: _url];
-    self.parser = _parser;
-    [_parser release];
-
     NSLog(@"[Biruni] Parsing %@", _url);
 
-    self.parser.delegate = self;
-    [self.parser setShouldProcessNamespaces: YES];
-    [self.parser parse];
+    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:_url
+                                                           cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
+                                                       timeoutInterval:kBiruniTimeout];
+    [request setValue:kBiruniUserAgent forHTTPHeaderField:@"User-Agent"];
+    [request setHTTPMethod:@"GET"];
+
+    urlConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
   }
 
   return self;
@@ -177,6 +186,57 @@
            tags:(NSString *) tags
           block:(void(^)(NSArray *)) block {
   return [Biruni parseURL: url tags:tags container: nil block: block];
+}
+
+
+#pragma mark -
+#pragma mark NSURLConnectionDelegate
+
+- (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace {
+  return [protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+  [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
+  [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+}
+
+- (void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response {
+  responseData = [[NSMutableData alloc] init];
+
+  NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+  responseHttpCode = httpResponse.statusCode;
+}
+
+-(void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data {
+  [responseData appendData:data];
+}
+
+- (NSCachedURLResponse*)connection:(NSURLConnection*)connection
+                 willCacheResponse:(NSCachedURLResponse*)cachedResponse {
+  return nil;
+}
+
+-(void) connectionDidFinishLoading:(NSURLConnection*)connection {
+  NSData *data;
+
+  if ((responseHttpCode == kBiruniHttpNotFound) ||
+      (responseHttpCode == kBiruniHttpBadResponse)) {
+    // TODO: Add an add'l block argument for errors
+    NSLog(@"There was an error retrieving the data");
+  } else {
+    data = [NSData dataWithData: responseData];
+    [self initParser: data];
+  }
+
+  [responseData release];
+  [urlConnection release];
+}
+
+- (void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)error {
+  // TODO: Add an add'l block argument for errors
+  [responseData release];
+  [urlConnection release];
 }
 
 
