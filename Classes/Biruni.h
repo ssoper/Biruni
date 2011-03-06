@@ -2,7 +2,7 @@
 //  Biruni.h
 //  Biruni
 //
-//  Copyright (c) 2010 Sean Soper
+//  Copyright (c) 2011 Sean Soper
 //  
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
