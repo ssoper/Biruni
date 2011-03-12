@@ -37,7 +37,6 @@ typedef void (^ErrorBlock)(NSError *);
   ResultsBlock afterParse;
   ResultBlock onResult;
   ErrorBlock onError;
-//  void (^afterParse)(NSArray *);
   
 @private
   NSMutableArray *currentPath, *results;
@@ -54,7 +53,6 @@ typedef void (^ErrorBlock)(NSError *);
 
 @property (nonatomic, retain) NSArray *tagsToParse;
 @property (nonatomic, copy) NSString *container;
-//@property (copy) void (^afterParse)(NSArray *);
 @property (nonatomic, copy) ResultsBlock afterParse;
 
 @property (nonatomic, assign) BOOL process;
