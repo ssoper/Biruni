@@ -27,10 +27,17 @@
 
 @class BiruniFormatter;
 
+typedef void (^ResultsBlock)(NSArray *);
+typedef void (^ResultBlock)(NSDictionary *);
+typedef void (^ErrorBlock)(NSError *);
+
 @interface Biruni : NSObject <NSXMLParserDelegate> {
   NSArray *tagsToParse;
   NSString *container;
-  void (^afterParse)(NSArray *);
+  ResultsBlock afterParse;
+  ResultBlock onResult;
+  ErrorBlock onError;
+//  void (^afterParse)(NSArray *);
   
 @private
   NSMutableArray *currentPath, *results;
@@ -47,7 +54,8 @@
 
 @property (nonatomic, retain) NSArray *tagsToParse;
 @property (nonatomic, copy) NSString *container;
-@property (copy) void (^afterParse)(NSArray *);
+//@property (copy) void (^afterParse)(NSArray *);
+@property (nonatomic, copy) ResultsBlock afterParse;
 
 @property (nonatomic, assign) BOOL process;
 @property (nonatomic, assign) NSUInteger targetDepth;
@@ -55,19 +63,19 @@
 
 + (id) parseData:(NSData *) data
             tags:(NSString *) tags
-           block:(void(^)(NSArray *)) block;
+           block:(ResultsBlock) block;
 
 + (id) parseURL:(NSString *) url
            tags:(NSString *) tags
-          block:(void(^)(NSArray *)) block;
+          block:(ResultsBlock) block;
 
 + (id) parseData:(NSData *) data
             tags:(NSString *) tags
        container:(NSString *) _container
-           block:(void(^)(NSArray *)) block;
+           block:(ResultsBlock) block;
 
 + (id) parseURL:(NSString *) url
            tags:(NSString *) tags
        container:(NSString *) _container
-          block:(void(^)(NSArray *)) block;
+          block:(ResultsBlock) block;
 @end

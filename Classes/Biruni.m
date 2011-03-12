@@ -138,6 +138,10 @@ static NSString*  kBiruniUserAgent       = @"Biruni RSS parser";
   return result;
 }
 
+- (NSError *) errorDomain {
+  
+}
+
 + (NSArray *) parseTags:(NSString *) tags {
   NSMutableArray *tmpTags = [[NSMutableArray alloc] init];
   for (NSString *tag in [tags componentsSeparatedByString: @","]) {
@@ -290,7 +294,7 @@ static NSString*  kBiruniUserAgent       = @"Biruni RSS parser";
   if (self.targetDepth == 0 && [self currentTagMatch])
     self.targetDepth = currentPath.count;
 
-  // Tag matches but Wrong depth
+  // Tag matches but wrong depth
   if ([self currentTagMatch] && self.targetDepth < currentPath.count)
     return;
 
