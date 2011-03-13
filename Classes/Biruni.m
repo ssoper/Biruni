@@ -30,13 +30,15 @@ static const NSUInteger kBiruniTimeout         = 30;
 static const NSUInteger kBiruniHttpNotFound    = 404;
 static const NSUInteger kBiruniHttpBadResponse = 500;
 
-static NSString*  kBiruniUserAgent       = @"Biruni RSS parser";
+static NSString* kBiruniUserAgent   = @"Biruni RSS parser";
+//static NSString* kBiruniErrorDomain = @"BiruniError";
 
 @implementation Biruni
 
-@synthesize tagsToParse, container, afterParse;
+@synthesize tagsToParse, container, onComplete;
 @synthesize process, targetDepth, parser;
 
+@synthesize usesUrl, onResult, onError;
 
 #pragma mark -
 #pragma mark Private
@@ -49,7 +51,7 @@ static NSString*  kBiruniUserAgent       = @"Biruni RSS parser";
     [_tagsToParse release];
 
     self.container = _container;
-    self.afterParse = block;
+    self.onComplete = block;
   }
 
   return self;
@@ -138,10 +140,6 @@ static NSString*  kBiruniUserAgent       = @"Biruni RSS parser";
   return result;
 }
 
-- (NSError *) errorDomain {
-  
-}
-
 + (NSArray *) parseTags:(NSString *) tags {
   NSMutableArray *tmpTags = [[NSMutableArray alloc] init];
   for (NSString *tag in [tags componentsSeparatedByString: @","]) {
@@ -155,6 +153,52 @@ static NSString*  kBiruniUserAgent       = @"Biruni RSS parser";
   return finalTags;
 }
 
+
+#pragma mark -
+#pragma mark Public methods
+
++ (id) parserWithData:(NSData *) data
+                 tags:(NSString *) firstTag, ... {
+  return [[Biruni alloc] initWithData: data tags: firstTag, __VA_ARGS__];
+}
+
+- (id) initWithData:(NSData *) data
+               tags:(NSString *) firstTag, ... {
+
+  // Extract tags
+  NSMutableArray *tmpTags = [[NSMutableArray alloc] init];
+  va_list args;
+  va_start(args, firstTag);
+  for (NSString *arg = firstTag; arg != nil; arg = va_arg(args, NSString*)) {
+    [tmpTags addObject: arg];
+  }
+  va_end(args);
+
+  if (self = [super init]) {
+    self.tagsToParse = [[NSArray alloc] initWithArray: tmpTags];
+    self.usesUrl = NO;
+
+    NSXMLParser *_parser = [[NSXMLParser alloc] initWithData: data];
+    self.parser = _parser;
+    [_parser release];
+
+    NSLog(@"[Biruni] Parsing %u bytes", [data length]);
+  }
+
+  [tmpTags release];
+
+  return self;
+}
+
+- (void) start {
+  if (self.usesUrl) {
+    // Parse that url yo
+  } else {
+    self.parser.delegate = self;
+    [self.parser setShouldProcessNamespaces: YES];
+    [self.parser parse];
+  }
+}
 
 #pragma mark -
 #pragma mark Public class methods
@@ -391,13 +435,13 @@ static NSString*  kBiruniUserAgent       = @"Biruni RSS parser";
   NSArray *final = [NSArray arrayWithArray: results];
   [results release];
 
-  self.afterParse(final);
+  self.onComplete(final);
 }
 
 - (void) dealloc {
   [tagsToParse release];
   [container release];
-  [afterParse release];
+  [onComplete release];
   [parser release];
 
   [super dealloc];

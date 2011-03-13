@@ -27,16 +27,17 @@
 
 @class BiruniFormatter;
 
-typedef void (^ResultsBlock)(NSArray *);
-typedef void (^ResultBlock)(NSDictionary *);
-typedef void (^ErrorBlock)(NSError *);
+typedef void (^BiruniCompleteBlock)(NSArray *);
+typedef void (^BiruniResultBlock)(NSDictionary *);
+typedef void (^BiruniErrorBlock)(NSError *);
 
 @interface Biruni : NSObject <NSXMLParserDelegate> {
   NSArray *tagsToParse;
   NSString *container;
-  ResultsBlock afterParse;
-  ResultBlock onResult;
-  ErrorBlock onError;
+  BOOL usesUrl;
+  BiruniCompleteBlock onComplete;
+  BiruniResultBlock onResult;
+  BiruniErrorBlock onError;
   
 @private
   NSMutableArray *currentPath, *results;
@@ -53,27 +54,49 @@ typedef void (^ErrorBlock)(NSError *);
 
 @property (nonatomic, retain) NSArray *tagsToParse;
 @property (nonatomic, copy) NSString *container;
-@property (nonatomic, copy) ResultsBlock afterParse;
+@property (nonatomic, assign) BOOL usesUrl;
+@property (nonatomic, copy) BiruniCompleteBlock onComplete;
+@property (nonatomic, copy) BiruniResultBlock onResult;
+@property (nonatomic, copy) BiruniErrorBlock onError;
 
 @property (nonatomic, assign) BOOL process;
 @property (nonatomic, assign) NSUInteger targetDepth;
 @property (nonatomic, retain) NSXMLParser *parser;
 
++ (id) parserWithData:(NSData *) data
+                 tags:(NSString *) firstTag, ...NS_REQUIRES_NIL_TERMINATION;
+
+/*
++ (id) parserWithURL:(NSData *) data
+              andTags:(NSString *) tags;
+*/
+
+- (id) initWithData:(NSData *) data
+               tags:(NSString *) firstTag, ...NS_REQUIRES_NIL_TERMINATION;
+/*
+- (id) initWithURL:(NSData *) data
+           andTags:(NSString *) tags;
+*/
+- (void) start;
+
+//- (void) stop;
+
+
 + (id) parseData:(NSData *) data
             tags:(NSString *) tags
-           block:(ResultsBlock) block;
+           block:(BiruniCompleteBlock) block;
 
 + (id) parseURL:(NSString *) url
            tags:(NSString *) tags
-          block:(ResultsBlock) block;
+          block:(BiruniCompleteBlock) block;
 
 + (id) parseData:(NSData *) data
             tags:(NSString *) tags
        container:(NSString *) _container
-           block:(ResultsBlock) block;
+           block:(BiruniCompleteBlock) block;
 
 + (id) parseURL:(NSString *) url
            tags:(NSString *) tags
        container:(NSString *) _container
-          block:(ResultsBlock) block;
+          block:(BiruniCompleteBlock) block;
 @end
