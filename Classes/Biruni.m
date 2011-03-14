@@ -211,7 +211,7 @@ static NSString* kBiruniUserAgent   = @"Biruni RSS parser";
   if (parser) {
     va_list args;
     va_start(args, firstTag);
-    NSArray *tags = [[NSArray alloc] initWithArray: [parser extractTags: firstTag restOfTags: args]];
+    NSArray *tags = [parser extractTags: firstTag restOfTags: args];
     va_end(args);
     parser.tagsToParse = tags;
     [tags release];
@@ -226,7 +226,7 @@ static NSString* kBiruniUserAgent   = @"Biruni RSS parser";
   if (parser) {
     va_list args;
     va_start(args, firstTag);
-    NSArray *tags = [[NSArray alloc] initWithArray: [parser extractTags: firstTag restOfTags: args]];
+    NSArray *tags = [parser extractTags: firstTag restOfTags: args];
     va_end(args);
     parser.tagsToParse = tags;
     [tags release];
@@ -242,7 +242,7 @@ static NSString* kBiruniUserAgent   = @"Biruni RSS parser";
   if (self = [self initWithData: data]) {
     va_list args;
     va_start(args, firstTag);
-    NSArray *tags = [[NSArray alloc] initWithArray: [self extractTags: firstTag restOfTags: args]];
+    NSArray *tags = [self extractTags: firstTag restOfTags: args];
     va_end(args);
     self.tagsToParse = tags;
     [tags release];
@@ -256,7 +256,7 @@ static NSString* kBiruniUserAgent   = @"Biruni RSS parser";
   if (self = [self initWithUrl: url]) {
     va_list args;
     va_start(args, firstTag);
-    NSArray *tags = [[NSArray alloc] initWithArray: [self extractTags: firstTag restOfTags: args]];
+    NSArray *tags = [self extractTags: firstTag restOfTags: args];
     va_end(args);
     self.tagsToParse = tags;
     [tags release];
