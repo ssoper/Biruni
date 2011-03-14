@@ -38,10 +38,12 @@
 #pragma mark Tests
 
 - (void) testCount {
-  [Biruni parseData: [self loadTestCase: @"Feed"] tags: @"title" block: ^(NSArray *results) {
+  Biruni *parser = [Biruni parserWithData: [self loadTestCase: @"Feed"] tags: @"title", nil];
+  parser.onComplete = ^(NSArray *results) {
     NSUInteger expected = 3;
     STAssertEquals(expected, results.count, @"There should be %u results but instead there were %u", expected, results.count);
-  }];
+  };
+  [parser start];
 }
 
 - (void) testTitles {

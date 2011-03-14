@@ -153,51 +153,140 @@ static NSString* kBiruniUserAgent   = @"Biruni RSS parser";
   return finalTags;
 }
 
+- (NSArray *) extractTags:(NSString *) firstTag
+               restOfTags:(va_list) restOfTags {
 
+  NSMutableArray *tmpTags = [[NSMutableArray alloc] init];
+  for (NSString *arg = firstTag; arg != nil; arg = va_arg(restOfTags, NSString*)) {
+    [tmpTags addObject: arg];
+  }
+
+  NSArray *result = [[NSArray alloc] initWithArray: tmpTags];
+  [tmpTags release];
+
+  return result;
+}
+
+- (id) initWithData:(NSData *) data {
+  if (self = [super init]) {
+    self.usesUrl = NO;
+    
+    NSXMLParser *_parser = [[NSXMLParser alloc] initWithData: data];
+    self.parser = _parser;
+    [_parser release];
+    
+    NSLog(@"[Biruni] Parsing %u bytes", [data length]);
+  }
+
+  return self;
+}
+
+- (id) initWithUrl:(NSURL *) url {
+  if (self = [self init]) {
+    self.usesUrl = YES;
+
+    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url
+                                         cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
+                                     timeoutInterval:kBiruniTimeout];
+    [urlRequest setValue:kBiruniUserAgent forHTTPHeaderField:@"User-Agent"];
+    [urlRequest setHTTPMethod:@"GET"];
+
+    urlConnection = [[NSURLConnection alloc] initWithRequest: urlRequest delegate: self];// startImmediately: NO];
+    NSLog(@"[Biruni] Parsing %@", urlRequest.URL);
+    NSLog(@"my connection! %@", urlConnection);
+
+    NSLog(@"my request!! %@", urlRequest);
+  }
+
+  return self;
+}
+  
 #pragma mark -
 #pragma mark Public methods
 
 + (id) parserWithData:(NSData *) data
                  tags:(NSString *) firstTag, ... {
-  return [[Biruni alloc] initWithData: data tags: firstTag, __VA_ARGS__];
+
+  Biruni *parser = [[Biruni alloc] initWithData: data];
+  if (parser) {
+    va_list args;
+    va_start(args, firstTag);
+    NSArray *tags = [[NSArray alloc] initWithArray: [parser extractTags: firstTag restOfTags: args]];
+    va_end(args);
+    parser.tagsToParse = tags;
+    [tags release];
+  }
+
+  return [parser autorelease];
 }
+
++ (id) parserWithURL:(NSURL *) url
+                tags:(NSString *) firstTag, ... {
+  Biruni *parser = [[Biruni alloc] initWithUrl: url];
+  if (parser) {
+    va_list args;
+    va_start(args, firstTag);
+    NSArray *tags = [[NSArray alloc] initWithArray: [parser extractTags: firstTag restOfTags: args]];
+    va_end(args);
+    parser.tagsToParse = tags;
+    [tags release];
+  }
+
+  return [parser autorelease];
+}
+
 
 - (id) initWithData:(NSData *) data
                tags:(NSString *) firstTag, ... {
 
-  // Extract tags
-  NSMutableArray *tmpTags = [[NSMutableArray alloc] init];
-  va_list args;
-  va_start(args, firstTag);
-  for (NSString *arg = firstTag; arg != nil; arg = va_arg(args, NSString*)) {
-    [tmpTags addObject: arg];
-  }
-  va_end(args);
-
-  if (self = [super init]) {
-    self.tagsToParse = [[NSArray alloc] initWithArray: tmpTags];
-    self.usesUrl = NO;
-
-    NSXMLParser *_parser = [[NSXMLParser alloc] initWithData: data];
-    self.parser = _parser;
-    [_parser release];
-
-    NSLog(@"[Biruni] Parsing %u bytes", [data length]);
+  if (self = [self initWithData: data]) {
+    va_list args;
+    va_start(args, firstTag);
+    NSArray *tags = [[NSArray alloc] initWithArray: [self extractTags: firstTag restOfTags: args]];
+    va_end(args);
+    self.tagsToParse = tags;
+    [tags release];
   }
 
-  [tmpTags release];
+  return self;
+}
+
+- (id) initWithURL:(NSURL *) url
+              tags:(NSString *) firstTag, ... {
+  if (self = [self initWithUrl: url]) {
+    va_list args;
+    va_start(args, firstTag);
+    NSArray *tags = [[NSArray alloc] initWithArray: [self extractTags: firstTag restOfTags: args]];
+    va_end(args);
+    self.tagsToParse = tags;
+    [tags release];
+  }
 
   return self;
 }
 
 - (void) start {
   if (self.usesUrl) {
-    // Parse that url yo
+//    urlConnection = [[NSURLConnection alloc] initWithRequest: urlRequest delegate: self];
+//    NSLog(@"stuff %@", urlConnection.request);
+//    NSLog(@"[Biruni] Parsing %@", urlRequest.URL);
+//    NSLog(@"my connection! %@", urlConnection);
+//    [urlConnection scheduleInRunLoop: [NSRunLoop currentRunLoop] forMode: NSDefaultRunLoopMode];
+//    [urlConnection start];
   } else {
     self.parser.delegate = self;
     [self.parser setShouldProcessNamespaces: YES];
     [self.parser parse];
   }
+
+  // TODO: Add block for onStart
+}
+
+- (void) stop {
+  if (self.usesUrl)
+    [urlConnection cancel];
+
+  // TODO: Add block for onCancel
 }
 
 #pragma mark -
@@ -250,6 +339,7 @@ static NSString* kBiruniUserAgent   = @"Biruni RSS parser";
 }
 
 - (void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response {
+  NSLog(@"response! %@", response);
   responseData = [[NSMutableData alloc] init];
 
   NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
@@ -257,6 +347,7 @@ static NSString* kBiruniUserAgent   = @"Biruni RSS parser";
 }
 
 -(void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data {
+  NSLog(@"huh");
   [responseData appendData:data];
 }
 
@@ -273,6 +364,7 @@ static NSString* kBiruniUserAgent   = @"Biruni RSS parser";
     // TODO: Add an add'l block argument for errors
     NSLog(@"There was an error retrieving the data");
   } else {
+    NSLog(@"here?");
     data = [NSData dataWithData: responseData];
     [self initParser: data];
   }
@@ -282,6 +374,7 @@ static NSString* kBiruniUserAgent   = @"Biruni RSS parser";
 }
 
 - (void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)error {
+  NSLog(@"wtf? %@", error);
   // TODO: Add an add'l block argument for errors
   [responseData release];
   [urlConnection release];
@@ -435,7 +528,8 @@ static NSString* kBiruniUserAgent   = @"Biruni RSS parser";
   NSArray *final = [NSArray arrayWithArray: results];
   [results release];
 
-  self.onComplete(final);
+  if (self.onComplete)
+    self.onComplete(final);
 }
 
 - (void) dealloc {

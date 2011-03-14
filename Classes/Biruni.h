@@ -48,6 +48,7 @@ typedef void (^BiruniErrorBlock)(NSError *);
   NSUInteger targetDepth;
   NSXMLParser *parser;
   NSDictionary *currentAttributes;
+ // NSMutableURLRequest *urlRequest;
   NSURLConnection *urlConnection;
   NSUInteger responseHttpCode;
 }
@@ -66,17 +67,15 @@ typedef void (^BiruniErrorBlock)(NSError *);
 + (id) parserWithData:(NSData *) data
                  tags:(NSString *) firstTag, ...NS_REQUIRES_NIL_TERMINATION;
 
-/*
-+ (id) parserWithURL:(NSData *) data
-              andTags:(NSString *) tags;
-*/
++ (id) parserWithURL:(NSURL *) url
+                tags:(NSString *) firstTag, ...NS_REQUIRES_NIL_TERMINATION;
 
 - (id) initWithData:(NSData *) data
                tags:(NSString *) firstTag, ...NS_REQUIRES_NIL_TERMINATION;
-/*
-- (id) initWithURL:(NSData *) data
-           andTags:(NSString *) tags;
-*/
+
+- (id) initWithURL:(NSURL *) url
+              tags:(NSString *) firstTag, ...NS_REQUIRES_NIL_TERMINATION;
+
 - (void) start;
 
 //- (void) stop;
