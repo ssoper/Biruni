@@ -48,7 +48,6 @@ typedef void (^BiruniErrorBlock)(NSError *);
   NSUInteger targetDepth;
   NSXMLParser *parser;
   NSDictionary *currentAttributes;
- // NSMutableURLRequest *urlRequest;
   NSURLConnection *urlConnection;
   NSUInteger responseHttpCode;
 }
